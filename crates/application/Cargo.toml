@@ -1,0 +1,9 @@
+[package]
+name = "application"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+async-trait = { workspace = true }
+domain = { workspace = true }

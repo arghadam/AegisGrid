@@ -1,0 +1,229 @@
+component NetworkButton inherits Rectangle {
+    in property <string> text: "";
+    callback clicked();
+    background: #03140a;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        width: parent.width;
+        height: parent.height;
+        text: root.text;
+        color: #00ff66;
+        font-size: 11px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        clicked => root.clicked();
+    }
+}
+
+export component NetworkDetailScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in property <string> status: "BEREIT";
+    in property <string> verbindungen-anzahl: "0";
+    in property <string> ports-anzahl: "0";
+    in property <string> verbindungen: "—";
+    in property <string> ports: "—";
+
+    callback aktualisieren();
+    callback zurueck();
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        NetworkButton {
+            x: 14px;
+            y: 14px;
+            width: 120px;
+            height: 40px;
+            text: "< DASHBOARD";
+            clicked => root.zurueck();
+        }
+
+        Text {
+            x: 154px;
+            width: 520px;
+            height: parent.height;
+            text: "AEGISGRID // NETZWERK-DETAILANALYSE";
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        NetworkButton {
+            x: parent.width - 350px;
+            y: 14px;
+            width: 150px;
+            height: 40px;
+            text: "AKTUALISIEREN";
+            clicked => root.aktualisieren();
+        }
+
+        Text {
+            x: parent.width - 190px;
+            width: 170px;
+            height: parent.height;
+            text: "HOST: " + root.hostname;
+            color: #8cffaa;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 102px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            width: 260px;
+            height: parent.height;
+            text: "AKTIVE VERBINDUNGEN: " + root.verbindungen-anzahl;
+            color: #00ff66;
+            font-size: 13px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: 300px;
+            width: 220px;
+            height: parent.height;
+            text: "OFFENE PORTS: " + root.ports-anzahl;
+            color: #00ff66;
+            font-size: 13px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 300px;
+            width: 280px;
+            height: parent.height;
+            text: root.status;
+            color: #57b578;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 186px;
+        width: (parent.width - 54px) * 0.64;
+        height: parent.height - 204px;
+        background: #000402;
+        border-color: #0b5c2b;
+        border-width: 1px;
+        clip: true;
+
+        Text {
+            x: 14px;
+            y: 12px;
+            width: parent.width - 28px;
+            height: 20px;
+            text: "AKTIVE SOCKETS // PROTOKOLL | LOKAL -> REMOTE | STATUS | PROZESS";
+            color: #57b578;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 14px;
+            y: 40px;
+            width: parent.width - 28px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 14px;
+            y: 54px;
+            width: parent.width - 28px;
+            height: parent.height - 68px;
+            text: root.verbindungen;
+            color: #00ff66;
+            font-size: 9px;
+            wrap: word-wrap;
+        }
+    }
+
+    Rectangle {
+        x: 36px + (parent.width - 54px) * 0.64;
+        y: 186px;
+        width: (parent.width - 54px) * 0.36;
+        height: parent.height - 204px;
+        background: #000402;
+        border-color: #0b5c2b;
+        border-width: 1px;
+        clip: true;
+
+        Text {
+            x: 14px;
+            y: 12px;
+            width: parent.width - 28px;
+            height: 20px;
+            text: "LISTENING / UDP // PORT | PROZESS";
+            color: #57b578;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 14px;
+            y: 40px;
+            width: parent.width - 28px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 14px;
+            y: 54px;
+            width: parent.width - 28px;
+            height: parent.height - 68px;
+            text: root.ports;
+            color: #00ff66;
+            font-size: 9px;
+            wrap: word-wrap;
+        }
+    }
+}

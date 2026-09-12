@@ -1,0 +1,117 @@
+export component NetworkTrafficChart inherits Rectangle {
+    in property <string> download-pfad: "";
+    in property <string> upload-pfad: "";
+    in property <string> skala: "0 B/s";
+
+    background: #010805;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    for line-x in 7 : Rectangle {
+        x: line-x * parent.width / 6;
+        y: 0px;
+        width: 1px;
+        height: parent.height;
+        background: #0b5c2b;
+        opacity: 0.45;
+    }
+
+    for line-y in 5 : Rectangle {
+        x: 0px;
+        y: line-y * parent.height / 4;
+        width: parent.width;
+        height: 1px;
+        background: #0b5c2b;
+        opacity: 0.45;
+    }
+
+    Text {
+        x: 8px;
+        y: 5px;
+        width: 120px;
+        height: 14px;
+        text: "LIVE-TRAFFIC";
+        color: #57b578;
+        font-size: 9px;
+    }
+
+    Text {
+        x: parent.width - 145px;
+        y: 5px;
+        width: 137px;
+        height: 14px;
+        text: "MAX " + root.skala;
+        color: #57b578;
+        font-size: 9px;
+        horizontal-alignment: right;
+    }
+
+    Path {
+        x: 8px;
+        y: 22px;
+        width: parent.width - 16px;
+        height: parent.height - 42px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 1000;
+        viewbox-height: 300;
+        commands: root.download-pfad;
+        stroke: #00ff66;
+        stroke-width: 4px;
+        stroke-line-cap: round;
+        anti-alias: false;
+    }
+
+    Path {
+        x: 8px;
+        y: 22px;
+        width: parent.width - 16px;
+        height: parent.height - 42px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 1000;
+        viewbox-height: 300;
+        commands: root.upload-pfad;
+        stroke: #8cffaa;
+        stroke-width: 2px;
+        stroke-line-cap: round;
+        opacity: 0.78;
+        anti-alias: false;
+    }
+
+    Rectangle {
+        x: 10px;
+        y: parent.height - 17px;
+        width: 10px;
+        height: 2px;
+        background: #00ff66;
+    }
+
+    Text {
+        x: 25px;
+        y: parent.height - 22px;
+        width: 90px;
+        height: 16px;
+        text: "DOWNLOAD";
+        color: #00ff66;
+        font-size: 8px;
+    }
+
+    Rectangle {
+        x: 115px;
+        y: parent.height - 17px;
+        width: 10px;
+        height: 2px;
+        background: #8cffaa;
+    }
+
+    Text {
+        x: 130px;
+        y: parent.height - 22px;
+        width: 80px;
+        height: 16px;
+        text: "UPLOAD";
+        color: #8cffaa;
+        font-size: 8px;
+    }
+}

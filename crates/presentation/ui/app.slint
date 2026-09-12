@@ -1,0 +1,612 @@
+import { SetupScreen } from "screens/setup.slint";
+import { LoginScreen } from "screens/login.slint";
+import { TouchIdScanScreen } from "screens/touch_id_scan.slint";
+import { DashboardScreen } from "screens/dashboard.slint";
+import { ProcessSecurityScreen } from "screens/process_security.slint";
+import { ProcessDetailScreen } from "screens/process_detail.slint";
+import { TerminalScreen } from "screens/terminal.slint";
+import { NetworkDetailScreen } from "screens/network_detail.slint";
+import { AlertsScreen } from "screens/alerts.slint";
+import { SettingsScreen } from "screens/settings.slint";
+import { HardwareDetailScreen } from "screens/hardware_detail.slint";
+import { ProcessInventoryScreen } from "screens/process_inventory.slint";
+import { FirewallDetailScreen } from "screens/firewall_detail.slint";
+
+export component AppWindow inherits Window {
+    title: "AegisGrid";
+
+    width: 1280px;
+    height: 800px;
+
+    background: #010604;
+
+    in-out property <int> ansicht: 0;
+    in-out property <bool> fenster-aktiv: true;
+
+    in-out property <float> network-3d-phase: 0;
+
+    in-out property <string> benutzername: "";
+    in-out property <string> kennwort: "";
+    in-out property <string> kennwort-bestaetigung: "";
+    in-out property <string> statusmeldung: "";
+
+    in-out property <bool> touch-id-verfuegbar: false;
+
+    in-out property <string> touch-id-status:
+        "SICHERER SENSORZUGRIFF WIRD VORBEREITET";
+
+    in-out property <bool> touch-id-erfolgreich: false;
+
+    in-out property <string> hostname: "—";
+    in-out property <string> betriebssystem: "—";
+    in-out property <string> systemzeit: "--:--:--";
+
+    in-out property <string> cpu-wert: "—";
+    in-out property <string> ram-wert: "—";
+    in-out property <string> speicher-wert: "—";
+    in-out property <string> prozesse-wert: "—";
+
+    in-out property <string> download-wert: "—";
+    in-out property <string> upload-wert: "—";
+    in-out property <string> verbindungen-wert: "—";
+
+    in-out property <string> download-pfad: "";
+    in-out property <string> upload-pfad: "";
+    in-out property <string> netzwerk-skala: "0 B/s";
+
+    in-out property <string> offene-ports: "—";
+    in-out property <string> firewall-status: "PRÜFUNG LÄUFT";
+    in-out property <string> datei-integritaet-status: "PRÜFUNG LÄUFT";
+    in-out property <string> prozess-status: "PRÜFUNG LÄUFT";
+    in-out property <string> sicherheitswarnungen: "—";
+    in-out property <string> threat-status: "PRÜFUNG LÄUFT";
+
+    in-out property <string> prozess-geprueft: "0";
+    in-out property <string> prozess-hinweise: "0";
+    in-out property <string> prozess-pruefung: "0";
+    in-out property <string> prozess-hoch: "0";
+    in-out property <string> prozess-hoechstes-risiko: "0/100";
+
+    in-out property <string> prozess-tabelle:
+        "KEINE PROZESSE MIT PRÜFBEDARF";
+
+    in-out property <bool> prozess-detail-verfuegbar:
+        false;
+
+    in-out property <string> prozess-detail-pid: "—";
+    in-out property <string> prozess-detail-name: "—";
+    in-out property <string> prozess-detail-pfad: "—";
+    in-out property <string> prozess-detail-sha256: "—";
+    in-out property <string> prozess-detail-risiko: "—";
+    in-out property <string> prozess-detail-status: "—";
+    in-out property <string> prozess-detail-signatur: "—";
+    in-out property <string> prozess-detail-identifier: "—";
+    in-out property <string> prozess-detail-team-id: "—";
+    in-out property <string> prozess-detail-authorities: "—";
+    in-out property <string> prozess-detail-grund: "—";
+    in-out property <string> prozess-detail-signale: "—";
+
+    in-out property <string> protokoll: "";
+
+    in-out property <string> terminal-eingabe: "";
+    in-out property <string> terminal-ausgabe: "AEGISGRID TERMINAL BEREIT";
+    in-out property <string> terminal-status: "BEREIT";
+
+    in-out property <string> netzwerk-details-status: "BEREIT";
+    in-out property <string> netzwerk-verbindungen-anzahl: "0";
+    in-out property <string> netzwerk-ports-anzahl: "0";
+    in-out property <string> netzwerk-verbindungen: "—";
+    in-out property <string> netzwerk-ports: "—";
+
+    in-out property <string> sicherheitsverlauf: "NOCH KEINE SICHERHEITSEREIGNISSE";
+    in-out property <string> sicherheitsverlauf-status: "BEREIT";
+
+    in-out property <bool> animation-aktiv: true;
+    in-out property <int> auto-lock-minuten: 5;
+    in-out property <string> einstellungen-status: "";
+
+    in-out property <string> hardware-status: "BEREIT";
+    in-out property <string> hardware-cpu: "—";
+    in-out property <string> hardware-cores: "—";
+    in-out property <string> hardware-memory: "—";
+    in-out property <string> hardware-disks: "—";
+    in-out property <string> hardware-sensors: "—";
+
+    in-out property <string> prozessliste-status: "BEREIT";
+    in-out property <string> prozessliste-suche: "";
+    in-out property <string> prozessliste-gesamt: "0";
+    in-out property <string> prozessliste-treffer: "0";
+    in-out property <string> prozessliste-tabelle: "—";
+
+    in-out property <string> firewall-details-status: "BEREIT";
+    in-out property <string> firewall-details-zustand: "—";
+    in-out property <string> firewall-details-profile: "—";
+    in-out property <string> firewall-details-regeln: "—";
+
+    in-out property <string> aktuelles-kennwort: "";
+    in-out property <string> neues-kennwort: "";
+    in-out property <string> neues-kennwort-bestaetigung: "";
+
+    callback ersteinrichtung-absenden(
+        string,
+        string,
+        string
+    );
+
+    callback anmeldung-absenden(
+        string,
+        string
+    );
+
+    callback touch-id-anmeldung();
+
+    callback fensteraktivitaet-geaendert(
+        bool
+    );
+
+    callback terminal-ausfuehren(string);
+    callback terminal-leeren();
+    callback netzwerk-details-aktualisieren();
+    callback sicherheitsverlauf-aktualisieren();
+    callback kennwort-aendern(string, string, string, string);
+    callback einstellungen-geaendert(bool, int);
+    callback integritaets-basiswert-neu();
+    callback hardware-details-aktualisieren();
+    callback prozessliste-aktualisieren(string);
+    callback firewall-details-aktualisieren();
+
+    changed ansicht => {
+        if (
+            root.ansicht == 2
+            || root.ansicht == 4
+            || root.ansicht == 5
+            || root.ansicht == 6
+            || root.ansicht == 7
+            || root.ansicht == 8
+            || root.ansicht == 9
+            || root.ansicht == 10
+            || root.ansicht == 11
+            || root.ansicht == 12
+        ) {
+            window-focus.focus();
+
+            root.fenster-aktiv = true;
+
+            root.fensteraktivitaet-geaendert(
+                true
+            );
+        }
+    }
+
+    window-focus := FocusScope {
+        width: parent.width;
+        height: parent.height;
+
+        focus-on-click: false;
+        focus-on-tab-navigation: false;
+
+        focus-gained(reason) => {
+            if (
+                reason
+                == FocusReason.window-activation
+            ) {
+                root.fenster-aktiv = true;
+
+                root.fensteraktivitaet-geaendert(
+                    true
+                );
+            }
+        }
+
+        focus-lost(reason) => {
+            if (
+                reason
+                == FocusReason.window-activation
+            ) {
+                root.fenster-aktiv = false;
+
+                root.fensteraktivitaet-geaendert(
+                    false
+                );
+            }
+        }
+
+        Rectangle {
+            width: parent.width;
+            height: parent.height;
+
+            background: #010604;
+
+            if root.ansicht == 0 : SetupScreen {
+                benutzername <=> root.benutzername;
+                kennwort <=> root.kennwort;
+
+                kennwort-bestaetigung
+                    <=> root.kennwort-bestaetigung;
+
+                statusmeldung
+                    <=> root.statusmeldung;
+
+                absenden(
+                    username,
+                    password,
+                    confirmation
+                ) => {
+                    root.ersteinrichtung-absenden(
+                        username,
+                        password,
+                        confirmation
+                    );
+                }
+            }
+
+            if root.ansicht == 1 : LoginScreen {
+                benutzername <=> root.benutzername;
+                kennwort <=> root.kennwort;
+                statusmeldung <=> root.statusmeldung;
+
+                touch-id-verfuegbar:
+                    root.touch-id-verfuegbar;
+
+                absenden(
+                    username,
+                    password
+                ) => {
+                    root.anmeldung-absenden(
+                        username,
+                        password
+                    );
+                }
+
+                touch-id-absenden => {
+                    root.touch-id-anmeldung();
+                }
+            }
+
+            if root.ansicht == 2 : DashboardScreen {
+                hostname: root.hostname;
+                betriebssystem: root.betriebssystem;
+                systemzeit: root.systemzeit;
+
+                cpu-wert: root.cpu-wert;
+                ram-wert: root.ram-wert;
+                speicher-wert: root.speicher-wert;
+                prozesse-wert: root.prozesse-wert;
+
+                download-wert: root.download-wert;
+                upload-wert: root.upload-wert;
+
+                verbindungen-wert:
+                    root.verbindungen-wert;
+
+                download-pfad:
+                    root.download-pfad;
+
+                upload-pfad:
+                    root.upload-pfad;
+
+                netzwerk-skala:
+                    root.netzwerk-skala;
+
+                offene-ports:
+                    root.offene-ports;
+
+                firewall-status:
+                    root.firewall-status;
+
+                datei-integritaet-status:
+                    root.datei-integritaet-status;
+
+                prozess-status:
+                    root.prozess-status;
+
+                sicherheitswarnungen:
+                    root.sicherheitswarnungen;
+
+                threat-status:
+                    root.threat-status;
+
+                protokoll:
+                    root.protokoll;
+
+                network-3d-phase:
+                    root.network-3d-phase;
+
+                prozess-details-oeffnen => {
+                    root.ansicht = 4;
+                }
+
+                terminal-oeffnen => {
+                    root.ansicht = 6;
+                }
+
+                netzwerk-details-oeffnen => {
+                    root.ansicht = 7;
+                    root.netzwerk-details-aktualisieren();
+                }
+
+                warnungen-oeffnen => {
+                    root.ansicht = 8;
+                    root.sicherheitsverlauf-aktualisieren();
+                }
+
+                einstellungen-oeffnen => {
+                    root.einstellungen-status = "";
+                    root.ansicht = 9;
+                }
+
+                hardware-oeffnen => {
+                    root.ansicht = 10;
+                    root.hardware-details-aktualisieren();
+                }
+
+                firewall-oeffnen => {
+                    root.ansicht = 12;
+                    root.firewall-details-aktualisieren();
+                }
+
+                sperren => {
+                    root.kennwort = "";
+                    root.statusmeldung = "AEGISGRID WURDE GESPERRT.";
+                    root.ansicht = 1;
+                }
+            }
+
+            if root.ansicht == 3 : TouchIdScanScreen {
+                statusmeldung:
+                    root.touch-id-status;
+
+                erfolgreich:
+                    root.touch-id-erfolgreich;
+
+                phase:
+                    root.network-3d-phase;
+            }
+
+            if root.ansicht == 4 : ProcessSecurityScreen {
+                hostname:
+                    root.hostname;
+
+                prozess-status:
+                    root.prozess-status;
+
+                prozess-geprueft:
+                    root.prozess-geprueft;
+
+                prozess-hinweise:
+                    root.prozess-hinweise;
+
+                prozess-pruefung:
+                    root.prozess-pruefung;
+
+                prozess-hoch:
+                    root.prozess-hoch;
+
+                prozess-hoechstes-risiko:
+                    root.prozess-hoechstes-risiko;
+
+                prozess-tabelle:
+                    root.prozess-tabelle;
+
+                prozess-detail-verfuegbar:
+                    root.prozess-detail-verfuegbar;
+
+                prozess-detail-oeffnen => {
+                    if (
+                        root.prozess-detail-verfuegbar
+                    ) {
+                        root.ansicht = 5;
+                    }
+                }
+
+                prozessliste-oeffnen => {
+                    root.ansicht = 11;
+                    root.prozessliste-aktualisieren(
+                        root.prozessliste-suche
+                    );
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+
+            if root.ansicht == 5 : ProcessDetailScreen {
+                hostname:
+                    root.hostname;
+
+                detail-pid:
+                    root.prozess-detail-pid;
+
+                detail-name:
+                    root.prozess-detail-name;
+
+                detail-pfad:
+                    root.prozess-detail-pfad;
+
+                detail-sha256:
+                    root.prozess-detail-sha256;
+
+                detail-risiko:
+                    root.prozess-detail-risiko;
+
+                detail-status:
+                    root.prozess-detail-status;
+
+                detail-signatur:
+                    root.prozess-detail-signatur;
+
+                detail-identifier:
+                    root.prozess-detail-identifier;
+
+                detail-team-id:
+                    root.prozess-detail-team-id;
+
+                detail-authorities:
+                    root.prozess-detail-authorities;
+
+                detail-grund:
+                    root.prozess-detail-grund;
+
+                detail-signale:
+                    root.prozess-detail-signale;
+
+                zurueck => {
+                    root.ansicht = 4;
+                }
+            }
+
+            if root.ansicht == 6 : TerminalScreen {
+                hostname: root.hostname;
+                eingabe <=> root.terminal-eingabe;
+                ausgabe: root.terminal-ausgabe;
+                status: root.terminal-status;
+
+                ausfuehren(command) => {
+                    root.terminal-ausfuehren(command);
+                }
+
+                leeren => {
+                    root.terminal-leeren();
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+
+            if root.ansicht == 7 : NetworkDetailScreen {
+                hostname: root.hostname;
+                status: root.netzwerk-details-status;
+                verbindungen-anzahl: root.netzwerk-verbindungen-anzahl;
+                ports-anzahl: root.netzwerk-ports-anzahl;
+                verbindungen: root.netzwerk-verbindungen;
+                ports: root.netzwerk-ports;
+
+                aktualisieren => {
+                    root.netzwerk-details-aktualisieren();
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+
+            if root.ansicht == 8 : AlertsScreen {
+                hostname: root.hostname;
+                threat-status: root.threat-status;
+                warning-count: root.sicherheitswarnungen;
+                status: root.sicherheitsverlauf-status;
+                verlauf: root.sicherheitsverlauf;
+
+                aktualisieren => {
+                    root.sicherheitsverlauf-aktualisieren();
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+
+            if root.ansicht == 9 : SettingsScreen {
+                hostname: root.hostname;
+                benutzername: root.benutzername;
+                animation-aktiv <=> root.animation-aktiv;
+                auto-lock-minuten <=> root.auto-lock-minuten;
+                aktuelles-kennwort <=> root.aktuelles-kennwort;
+                neues-kennwort <=> root.neues-kennwort;
+                neues-kennwort-bestaetigung <=> root.neues-kennwort-bestaetigung;
+                statusmeldung: root.einstellungen-status;
+
+                animation-umschalten => {
+                    root.animation-aktiv = !root.animation-aktiv;
+                    root.einstellungen-geaendert(
+                        root.animation-aktiv,
+                        root.auto-lock-minuten
+                    );
+                }
+
+                auto-lock-setzen(minutes) => {
+                    root.auto-lock-minuten = minutes;
+                    root.einstellungen-geaendert(
+                        root.animation-aktiv,
+                        root.auto-lock-minuten
+                    );
+                }
+
+                kennwort-aendern(username, current_password, new_password, confirmation) => {
+                    root.kennwort-aendern(
+                        username,
+                        current_password,
+                        new_password,
+                        confirmation
+                    );
+                }
+
+                integritaets-basiswert-neu => {
+                    root.integritaets-basiswert-neu();
+                }
+
+                zurueck => {
+                    root.aktuelles-kennwort = "";
+                    root.neues-kennwort = "";
+                    root.neues-kennwort-bestaetigung = "";
+                    root.einstellungen-status = "";
+                    root.ansicht = 2;
+                }
+            }
+
+
+            if root.ansicht == 10 : HardwareDetailScreen {
+                hostname: root.hostname;
+                status: root.hardware-status;
+                cpu: root.hardware-cpu;
+                cores: root.hardware-cores;
+                memory: root.hardware-memory;
+                disks: root.hardware-disks;
+                sensors: root.hardware-sensors;
+
+                aktualisieren => {
+                    root.hardware-details-aktualisieren();
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+
+            if root.ansicht == 11 : ProcessInventoryScreen {
+                hostname: root.hostname;
+                suchbegriff <=> root.prozessliste-suche;
+                status: root.prozessliste-status;
+                gesamt: root.prozessliste-gesamt;
+                treffer: root.prozessliste-treffer;
+                tabelle: root.prozessliste-tabelle;
+
+                aktualisieren(query) => {
+                    root.prozessliste-aktualisieren(query);
+                }
+
+                zurueck => {
+                    root.ansicht = 4;
+                }
+            }
+
+            if root.ansicht == 12 : FirewallDetailScreen {
+                hostname: root.hostname;
+                status: root.firewall-details-status;
+                firewall-status: root.firewall-details-zustand;
+                profile: root.firewall-details-profile;
+                regeln: root.firewall-details-regeln;
+
+                aktualisieren => {
+                    root.firewall-details-aktualisieren();
+                }
+
+                zurueck => {
+                    root.ansicht = 2;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+[package]
+name = "aegisgrid-desktop"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+slint = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+sqlx = { workspace = true }
+domain = { workspace = true }
+application = { workspace = true }
+infrastructure_system = { workspace = true }
+infrastructure_network = { workspace = true }
+infrastructure_security = { workspace = true }
+infrastructure_storage = { workspace = true }
+infrastructure_ai = { workspace = true }
+infrastructure_auth = { workspace = true }
+observability = { workspace = true }
+presentation = { workspace = true }
+
+[build-dependencies]
+slint-build = { workspace = true }

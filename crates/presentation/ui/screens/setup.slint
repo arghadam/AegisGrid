@@ -1,0 +1,128 @@
+import { EingabeFeld } from "../components/eingabe_feld.slint";
+
+export component SetupScreen inherits Rectangle {
+    in-out property <string> benutzername: "";
+    in-out property <string> kennwort: "";
+    in-out property <string> kennwort-bestaetigung: "";
+    in-out property <string> statusmeldung: "";
+
+    callback absenden(string, string, string);
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.12;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.12;
+    }
+
+    Rectangle {
+        x: parent.width / 2 - 290px;
+        y: parent.height / 2 - 285px;
+        width: 580px;
+        height: 570px;
+        background: #020906;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        Text {
+            x: 28px;
+            y: 24px;
+            width: parent.width - 56px;
+            height: 34px;
+            text: "AEGISGRID // ERSTEINRICHTUNG";
+            color: #00ff66;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        Text {
+            x: 28px;
+            y: 67px;
+            width: parent.width - 56px;
+            height: 35px;
+            text: "Lokales Administratorkonto erstellen. Kennwörter werden niemals im Klartext gespeichert.";
+            color: #57b578;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        EingabeFeld {
+            x: 28px;
+            y: 125px;
+            width: parent.width - 56px;
+            label: "BENUTZERNAME";
+            wert <=> root.benutzername;
+        }
+
+        EingabeFeld {
+            x: 28px;
+            y: 215px;
+            width: parent.width - 56px;
+            label: "KENNWORT // MINDESTENS 12 ZEICHEN";
+            wert <=> root.kennwort;
+            kennwort: true;
+        }
+
+        EingabeFeld {
+            x: 28px;
+            y: 305px;
+            width: parent.width - 56px;
+            label: "KENNWORT BESTÄTIGEN";
+            wert <=> root.kennwort-bestaetigung;
+            kennwort: true;
+        }
+
+        Text {
+            x: 28px;
+            y: 398px;
+            width: parent.width - 56px;
+            height: 44px;
+            text: root.statusmeldung;
+            color: #ff4d4d;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            x: 28px;
+            y: 464px;
+            width: parent.width - 56px;
+            height: 54px;
+            background: #03140a;
+            border-color: #00ff66;
+            border-width: 1px;
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: "SICHER EINRICHTEN >";
+                color: #00ff66;
+                font-size: 12px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+                clicked => root.absenden(
+                    root.benutzername,
+                    root.kennwort,
+                    root.kennwort-bestaetigung
+                );
+            }
+        }
+    }
+}

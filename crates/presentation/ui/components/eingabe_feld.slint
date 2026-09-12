@@ -1,0 +1,41 @@
+export component EingabeFeld inherits Rectangle {
+    in property <string> label: "";
+    in-out property <string> wert: "";
+    in property <bool> kennwort: false;
+
+    height: 72px;
+    background: transparent;
+
+    Text {
+        x: 0px;
+        y: 0px;
+        width: parent.width;
+        height: 18px;
+        text: root.label;
+        color: #57b578;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    Rectangle {
+        x: 0px;
+        y: 24px;
+        width: parent.width;
+        height: 42px;
+        background: #010805;
+        border-color: input.has-focus ? #00ff66 : #0b5c2b;
+        border-width: 1px;
+
+        input := TextInput {
+            x: 12px;
+            y: 8px;
+            width: parent.width - 24px;
+            height: parent.height - 16px;
+            text <=> root.wert;
+            color: #00ff66;
+            font-size: 13px;
+            single-line: true;
+            input-type: root.kennwort ? InputType.password : InputType.text;
+        }
+    }
+}

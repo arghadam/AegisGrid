@@ -1,0 +1,9 @@
+[package]
+name = "infrastructure_ai"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+application = { workspace = true }
+domain = { workspace = true }

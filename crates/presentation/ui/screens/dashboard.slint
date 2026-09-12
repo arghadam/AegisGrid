@@ -1,0 +1,559 @@
+import { NetworkTrafficChart } from "../charts/network_traffic_chart.slint";
+import { Network3dSymbol } from "../components/network_3d_symbol.slint";
+
+component RahmenPanel inherits Rectangle {
+    in property <string> titel: "";
+
+    background: #020906;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        x: 14px;
+        y: 10px;
+        width: parent.width - 28px;
+        height: 20px;
+        text: root.titel;
+        color: #00ff66;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    Rectangle {
+        x: 14px;
+        y: 36px;
+        width: parent.width - 28px;
+        height: 1px;
+        background: #0b5c2b;
+    }
+}
+
+component SystemWert inherits Rectangle {
+    in property <string> titel: "";
+    in property <string> wert: "";
+
+    background: #010604;
+
+    Text {
+        x: 12px;
+        y: 8px;
+        width: parent.width - 24px;
+        height: 16px;
+        text: root.titel;
+        color: #3c8d58;
+        font-size: 10px;
+    }
+
+    Text {
+        x: 12px;
+        y: 28px;
+        width: parent.width - 24px;
+        height: 28px;
+        text: root.wert;
+        color: #00ff66;
+        font-size: 20px;
+        font-weight: 700;
+    }
+}
+
+component DashboardButton inherits Rectangle {
+    in property <string> text: "";
+    callback clicked();
+
+    background: #03140a;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        x: 8px;
+        width: parent.width - 16px;
+        height: parent.height;
+        text: root.text;
+        color: #00ff66;
+        font-size: 10px;
+        font-weight: 700;
+        vertical-alignment: center;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        clicked => root.clicked();
+    }
+}
+
+export component DashboardScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in property <string> betriebssystem: "—";
+    in property <string> systemzeit: "--:--:--";
+
+    in property <string> cpu-wert: "—";
+    in property <string> ram-wert: "—";
+    in property <string> speicher-wert: "—";
+    in property <string> prozesse-wert: "—";
+
+    in property <string> download-wert: "—";
+    in property <string> upload-wert: "—";
+    in property <string> verbindungen-wert: "—";
+
+    in property <string> download-pfad: "";
+    in property <string> upload-pfad: "";
+    in property <string> netzwerk-skala: "0 B/s";
+
+    in property <string> offene-ports: "—";
+    in property <string> firewall-status: "PRÜFUNG LÄUFT";
+    in property <string> datei-integritaet-status: "PRÜFUNG LÄUFT";
+    in property <string> prozess-status: "PRÜFUNG LÄUFT";
+    in property <string> sicherheitswarnungen: "—";
+    in property <string> threat-status: "PRÜFUNG LÄUFT";
+
+    in property <string> protokoll: "";
+
+    in property <float> network-3d-phase: 0;
+
+    callback prozess-details-oeffnen();
+    callback terminal-oeffnen();
+    callback netzwerk-details-oeffnen();
+    callback warnungen-oeffnen();
+    callback einstellungen-oeffnen();
+    callback hardware-oeffnen();
+    callback firewall-oeffnen();
+    callback sperren();
+
+    background: #010604;
+
+    for grid_x in 24: Rectangle {
+        x: grid_x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid_y in 16: Rectangle {
+        y: grid_y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        Text {
+            x: 18px;
+            width: 470px;
+            height: parent.height;
+            text: "AEGISGRID // CYBER-KOMMANDOZENTRALE";
+            color: #00ff66;
+            font-size: 20px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: 500px;
+            width: 220px;
+            height: parent.height;
+            text: "HOST: " + root.hostname;
+            color: #8cffaa;
+            font-size: 11px;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: 730px;
+            width: 210px;
+            height: parent.height;
+            text: root.betriebssystem;
+            color: #57b578;
+            font-size: 11px;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 290px;
+            width: 130px;
+            height: parent.height;
+            text: root.systemzeit;
+            color: #00ff66;
+            font-size: 15px;
+            font-weight: 700;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 145px;
+            width: 125px;
+            height: parent.height;
+            text: "● SYSTEM ONLINE";
+            color: #00ff66;
+            font-size: 11px;
+            font-weight: 700;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    RahmenPanel {
+        x: 18px;
+        y: 102px;
+        width: 245px;
+        height: parent.height - 120px;
+        titel: "SYSTEMÜBERWACHUNG";
+
+        SystemWert {
+            x: 14px;
+            y: 52px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "CPU-AUSLASTUNG";
+            wert: root.cpu-wert;
+        }
+
+        SystemWert {
+            x: 14px;
+            y: 130px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "ARBEITSSPEICHER";
+            wert: root.ram-wert;
+        }
+
+        SystemWert {
+            x: 14px;
+            y: 208px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "DATENSPEICHER";
+            wert: root.speicher-wert;
+        }
+
+        SystemWert {
+            x: 14px;
+            y: 286px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "AKTIVE PROZESSE";
+            wert: root.prozesse-wert;
+        }
+
+        Text {
+            x: 14px;
+            y: 382px;
+            width: parent.width - 28px;
+            height: 20px;
+            text: "SYSTEMKERN";
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 14px;
+            y: 412px;
+            width: parent.width - 28px;
+            height: 20px;
+            text: "● ÜBERWACHUNG AKTIV";
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        DashboardButton {
+            x: 14px;
+            y: 456px;
+            width: parent.width - 28px;
+            height: 42px;
+            text: "> LOKALES TERMINAL";
+            clicked => root.terminal-oeffnen();
+        }
+
+        DashboardButton {
+            x: 14px;
+            y: 510px;
+            width: parent.width - 28px;
+            height: 42px;
+            text: "> EINSTELLUNGEN";
+            clicked => root.einstellungen-oeffnen();
+        }
+
+        DashboardButton {
+            x: 14px;
+            y: 564px;
+            width: parent.width - 28px;
+            height: 42px;
+            text: "> HARDWARE / SENSOREN";
+            clicked => root.hardware-oeffnen();
+        }
+    }
+
+    RahmenPanel {
+        x: 279px;
+        y: 102px;
+        width: parent.width - 558px;
+        height: 300px;
+        titel: "NETZWERK // LIVE-VERKEHR";
+
+        SystemWert {
+            x: 14px;
+            y: 52px;
+            width: 180px;
+            height: 68px;
+            titel: "DOWNLOAD";
+            wert: root.download-wert;
+        }
+
+        SystemWert {
+            x: 204px;
+            y: 52px;
+            width: 180px;
+            height: 68px;
+            titel: "UPLOAD";
+            wert: root.upload-wert;
+        }
+
+        SystemWert {
+            x: 394px;
+            y: 52px;
+            width: parent.width - 408px;
+            height: 68px;
+            titel: "VERBINDUNGEN";
+            wert: root.verbindungen-wert;
+        }
+
+        Rectangle {
+            x: 14px;
+            y: 134px;
+            width: parent.width - 294px;
+            height: 148px;
+            background: #021008;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            NetworkTrafficChart {
+                x: 8px;
+                y: 8px;
+                width: parent.width - 16px;
+                height: parent.height - 16px;
+                download-pfad: root.download-pfad;
+                upload-pfad: root.upload-pfad;
+                skala: root.netzwerk-skala;
+            }
+        }
+
+        Rectangle {
+            x: parent.width - 266px;
+            y: 134px;
+            width: 252px;
+            height: 148px;
+            background: #021008;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Network3dSymbol {
+                x: 10px;
+                y: 10px;
+                width: parent.width - 20px;
+                height: parent.height - 20px;
+                status-text: "NETZWERK AKTIV";
+                center-text: "AEGIS";
+                active: true;
+                phase: root.network-3d-phase;
+            }
+        }
+    }
+
+    RahmenPanel {
+        x: 279px;
+        y: 416px;
+        width: parent.width - 558px;
+        height: parent.height - 434px;
+        titel: "AEGISGRID // LIVE-SYSTEMPROTOKOLL";
+
+        Rectangle {
+            x: 14px;
+            y: 52px;
+            width: parent.width - 28px;
+            height: parent.height - 66px;
+            background: #000402;
+            border-color: #063d1d;
+            border-width: 1px;
+
+            Text {
+                x: 14px;
+                y: 12px;
+                width: parent.width - 28px;
+                height: parent.height - 24px;
+                text: root.protokoll;
+                color: #00ff66;
+                font-size: 11px;
+                wrap: word-wrap;
+            }
+        }
+    }
+
+    RahmenPanel {
+        x: parent.width - 263px;
+        y: 102px;
+        width: 245px;
+        height: parent.height - 120px;
+        titel: "SICHERHEITSZENTRALE";
+
+        Text {
+            x: 14px;
+            y: 54px;
+            width: parent.width - 28px;
+            height: 16px;
+            text: "BEDROHUNGSSTATUS";
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 14px;
+            y: 78px;
+            width: parent.width - 28px;
+            height: 34px;
+            text: root.threat-status;
+            color: #00ff66;
+            font-size: 18px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            x: 14px;
+            y: 126px;
+            width: parent.width - 28px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        SystemWert {
+            x: 14px;
+            y: 144px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "SICHERHEITSWARNUNGEN";
+            wert: root.sicherheitswarnungen;
+        }
+
+        SystemWert {
+            x: 14px;
+            y: 222px;
+            width: parent.width - 28px;
+            height: 68px;
+            titel: "OFFENE PORTS";
+            wert: root.offene-ports;
+        }
+
+        Text {
+            x: 14px;
+            y: 318px;
+            width: parent.width - 28px;
+            height: 16px;
+            text: "SICHERHEITSMODULE";
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        DashboardButton {
+            x: 10px;
+            y: 334px;
+            width: parent.width - 20px;
+            height: 30px;
+            text: "● NETZWERK-DETAILS  >";
+            clicked => root.netzwerk-details-oeffnen();
+        }
+
+        Rectangle {
+            x: 10px;
+            y: 370px;
+            width: parent.width - 20px;
+            height: 42px;
+            background: #03140a;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Text {
+                x: 6px;
+                y: 5px;
+                width: parent.width - 32px;
+                height: 32px;
+                text: "● PROZESSE: " + root.prozess-status;
+                color: #00ff66;
+                font-size: 10px;
+                font-weight: 700;
+                wrap: word-wrap;
+            }
+
+            Text {
+                x: parent.width - 22px;
+                width: 16px;
+                height: parent.height;
+                text: ">";
+                color: #00ff66;
+                font-size: 15px;
+                font-weight: 700;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+                clicked => {
+                    root.prozess-details-oeffnen();
+                }
+            }
+        }
+
+        Text {
+            x: 14px;
+            y: 424px;
+            width: parent.width - 28px;
+            height: 34px;
+            text: "● DATEI-INTEGRITÄT: " + root.datei-integritaet-status;
+            color: #00ff66;
+            font-size: 10px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+
+        DashboardButton {
+            x: 10px;
+            y: 466px;
+            width: parent.width - 20px;
+            height: 42px;
+            text: "> FIREWALL: " + root.firewall-status;
+            clicked => root.firewall-oeffnen();
+        }
+
+
+        DashboardButton {
+            x: 10px;
+            y: 510px;
+            width: parent.width - 20px;
+            height: 42px;
+            text: "> SECURITY-VERLAUF";
+            clicked => root.warnungen-oeffnen();
+        }
+
+        DashboardButton {
+            x: 10px;
+            y: 564px;
+            width: parent.width - 20px;
+            height: 42px;
+            text: "> AEGISGRID SPERREN";
+            clicked => root.sperren();
+        }
+    }
+}

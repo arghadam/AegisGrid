@@ -1,0 +1,473 @@
+component DetailWert inherits Rectangle {
+    in property <string> titel: "";
+    in property <string> wert: "";
+
+    background: #010604;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        x: 14px;
+        y: 10px;
+
+        width: parent.width - 28px;
+        height: 16px;
+
+        text: root.titel;
+
+        color: #3c8d58;
+        font-size: 10px;
+    }
+
+    Text {
+        x: 14px;
+        y: 32px;
+
+        width: parent.width - 28px;
+        height: parent.height - 42px;
+
+        text: root.wert;
+
+        color: #00ff66;
+        font-size: 15px;
+        font-weight: 700;
+
+        wrap: word-wrap;
+    }
+}
+
+export component ProcessDetailScreen inherits Rectangle {
+    in property <string> hostname: "—";
+
+    in property <string> detail-pid: "—";
+    in property <string> detail-name: "—";
+    in property <string> detail-pfad: "—";
+    in property <string> detail-sha256: "—";
+    in property <string> detail-risiko: "—";
+    in property <string> detail-status: "—";
+    in property <string> detail-signatur: "—";
+    in property <string> detail-identifier: "—";
+    in property <string> detail-team-id: "—";
+    in property <string> detail-authorities: "—";
+    in property <string> detail-grund: "—";
+    in property <string> detail-signale: "—";
+
+    callback zurueck();
+
+    background: #010604;
+
+    for grid_x in 24 : Rectangle {
+        x: grid_x * 64px;
+
+        width: 1px;
+        height: parent.height;
+
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid_y in 16 : Rectangle {
+        y: grid_y * 56px;
+
+        width: parent.width;
+        height: 1px;
+
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+
+        width: parent.width - 36px;
+        height: 68px;
+
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        Rectangle {
+            x: 14px;
+            y: 14px;
+
+            width: 130px;
+            height: 40px;
+
+            background: #010604;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+
+                text: "< PROZESSE";
+
+                color: #00ff66;
+                font-size: 11px;
+                font-weight: 700;
+
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+
+                clicked => {
+                    root.zurueck();
+                }
+            }
+        }
+
+        Text {
+            x: 165px;
+
+            width: 520px;
+            height: parent.height;
+
+            text:
+                "AEGISGRID // PROZESS-DETAILANALYSE";
+
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 310px;
+
+            width: 290px;
+            height: parent.height;
+
+            text:
+                "HOST: "
+                + root.hostname;
+
+            color: #8cffaa;
+            font-size: 11px;
+
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    DetailWert {
+        x: 18px;
+        y: 104px;
+
+        width: 210px;
+        height: 86px;
+
+        titel: "PID";
+        wert: root.detail-pid;
+    }
+
+    DetailWert {
+        x: 242px;
+        y: 104px;
+
+        width: 300px;
+        height: 86px;
+
+        titel: "PROZESS";
+        wert: root.detail-name;
+    }
+
+    DetailWert {
+        x: 556px;
+        y: 104px;
+
+        width: 210px;
+        height: 86px;
+
+        titel: "RISIKO";
+        wert: root.detail-risiko;
+    }
+
+    DetailWert {
+        x: 780px;
+        y: 104px;
+
+        width: 240px;
+        height: 86px;
+
+        titel: "STATUS";
+        wert: root.detail-status;
+    }
+
+    DetailWert {
+        x: 1034px;
+        y: 104px;
+
+        width: parent.width - 1052px;
+        height: 86px;
+
+        titel: "CODE-SIGNATUR";
+        wert: root.detail-signatur;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 208px;
+
+        width: parent.width - 36px;
+        height: 96px;
+
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+
+            width: parent.width - 32px;
+            height: 18px;
+
+            text: "AUSFÜHRUNGSPFAD";
+
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 16px;
+            y: 40px;
+
+            width: parent.width - 32px;
+            height: 42px;
+
+            text: root.detail-pfad;
+
+            color: #00ff66;
+            font-size: 12px;
+
+            wrap: word-wrap;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 320px;
+
+        width: parent.width - 36px;
+        height: 92px;
+
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+
+            width: parent.width - 32px;
+            height: 18px;
+
+            text: "DATEI-FINGERPRINT // SHA-256";
+
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 16px;
+            y: 40px;
+
+            width: parent.width - 32px;
+            height: 34px;
+
+            text: root.detail-sha256;
+
+            color: #00ff66;
+            font-size: 11px;
+            font-weight: 700;
+
+            wrap: word-wrap;
+        }
+    }
+
+    DetailWert {
+        x: 18px;
+        y: 428px;
+
+        width: 380px;
+        height: 112px;
+
+        titel: "SIGNATUR-IDENTIFIER";
+        wert: root.detail-identifier;
+    }
+
+    DetailWert {
+        x: 414px;
+        y: 428px;
+
+        width: 250px;
+        height: 112px;
+
+        titel: "TEAM-ID";
+        wert: root.detail-team-id;
+    }
+
+    DetailWert {
+        x: 680px;
+        y: 428px;
+
+        width: parent.width - 698px;
+        height: 112px;
+
+        titel: "AUTHORITY / ZERTIFIKATSKETTE";
+        wert: root.detail-authorities;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 556px;
+
+        width: 380px;
+        height: parent.height - 574px;
+
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 14px;
+
+            width: parent.width - 32px;
+            height: 20px;
+
+            text: "HAUPTGRUND";
+
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 16px;
+            y: 46px;
+
+            width: parent.width - 32px;
+            height: 1px;
+
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 16px;
+            y: 66px;
+
+            width: parent.width - 32px;
+            height: 54px;
+
+            text: root.detail-grund;
+
+            color: #8cffaa;
+            font-size: 12px;
+            font-weight: 700;
+
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            x: 16px;
+            y: 132px;
+
+            width: parent.width - 32px;
+            height: 1px;
+
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 16px;
+            y: 148px;
+
+            width: parent.width - 32px;
+            height: 18px;
+
+            text: "BEWERTUNG";
+
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 16px;
+            y: 174px;
+
+            width: parent.width - 32px;
+            height: parent.height - 188px;
+
+            text:
+                "Technische Auffälligkeit erkannt.\n"
+                + "Kein automatischer Malware-Nachweis.\n"
+                + "Der Prozess wird nicht automatisch beendet.";
+
+            color: #57b578;
+            font-size: 10px;
+
+            wrap: word-wrap;
+        }
+    }
+
+    Rectangle {
+        x: 416px;
+        y: 556px;
+
+        width: parent.width - 434px;
+        height: parent.height - 574px;
+
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 14px;
+
+            width: parent.width - 32px;
+            height: 20px;
+
+            text:
+                "ERKANNTE RISIKO-SIGNALE";
+
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 16px;
+            y: 46px;
+
+            width: parent.width - 32px;
+            height: 1px;
+
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 18px;
+            y: 66px;
+
+            width: parent.width - 36px;
+            height: parent.height - 84px;
+
+            text:
+                root.detail-signale;
+
+            color: #00ff66;
+            font-size: 12px;
+
+            wrap: word-wrap;
+        }
+    }
+}

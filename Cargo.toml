@@ -1,0 +1,48 @@
+[workspace]
+resolver = "2"
+members = [
+  "apps/desktop",
+  "crates/domain",
+  "crates/application",
+  "crates/infrastructure_system",
+  "crates/infrastructure_network",
+  "crates/infrastructure_security",
+  "crates/infrastructure_storage",
+  "crates/infrastructure_ai",
+  "crates/infrastructure_auth",
+  "crates/observability",
+  "crates/presentation",
+]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2024"
+authors = ["AegisGrid Team"]
+rust-version = "1.95"
+
+[workspace.dependencies]
+async-trait = "0.1"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+sha2 = "0.10"
+slint = "=1.13.1"
+slint-build = "=1.13.1"
+sysinfo = { version = "=0.39.6", default-features = false, features = ["system", "network", "disk", "component"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite"] }
+argon2 = { version = "=0.5.3", features = ["std", "rand"] }
+keyring = { version = "=3.6.3", default-features = false, features = ["apple-native", "windows-native"] }
+netstat2 = "0.11"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
+
+# Internal crates
+domain = { path = "crates/domain" }
+application = { path = "crates/application" }
+infrastructure_system = { path = "crates/infrastructure_system" }
+infrastructure_network = { path = "crates/infrastructure_network" }
+infrastructure_security = { path = "crates/infrastructure_security" }
+infrastructure_storage = { path = "crates/infrastructure_storage" }
+infrastructure_ai = { path = "crates/infrastructure_ai" }
+infrastructure_auth = { path = "crates/infrastructure_auth" }
+observability = { path = "crates/observability" }
+presentation = { path = "crates/presentation" }

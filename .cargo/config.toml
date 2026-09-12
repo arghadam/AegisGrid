@@ -1,0 +1,14 @@
+# macOS Swift runtime search path.
+# Required by the LocalAuthentication bridge used for Touch ID.
+# The rpath is embedded into every macOS binary/test built by Cargo.
+[target.aarch64-apple-darwin]
+rustflags = [
+    "-C",
+    "link-arg=-Wl,-rpath,/usr/lib/swift",
+]
+
+[target.x86_64-apple-darwin]
+rustflags = [
+    "-C",
+    "link-arg=-Wl,-rpath,/usr/lib/swift",
+]

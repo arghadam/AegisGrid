@@ -1,0 +1,347 @@
+export component ProcessSecurityScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in property <string> prozess-status: "NOCH NICHT ANALYSIERT";
+    in property <string> prozess-geprueft: "0";
+    in property <string> prozess-hinweise: "0";
+    in property <string> prozess-pruefung: "0";
+    in property <string> prozess-hoch: "0";
+    in property <string> prozess-hoechstes-risiko: "0/100";
+    in property <string> prozess-tabelle: "KEINE PROZESSE MIT PRÜFBEDARF";
+    in property <bool> prozess-detail-verfuegbar: false;
+
+    callback zurueck();
+    callback prozess-detail-oeffnen();
+    callback prozessliste-oeffnen();
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 22px;
+        y: 18px;
+        width: parent.width - 44px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        Rectangle {
+            x: 14px;
+            y: 14px;
+            width: 100px;
+            height: 40px;
+            background: #010604;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: "< ZURÜCK";
+                color: #00ff66;
+                font-size: 11px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+                clicked => root.zurueck();
+            }
+        }
+
+        Text {
+            x: 135px;
+            width: 620px;
+            height: parent.height;
+            text: "AEGISGRID // PROZESS-SICHERHEITSANALYSE";
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Rectangle {
+            x: parent.width - 430px;
+            y: 14px;
+            width: 170px;
+            height: 40px;
+            background: #010604;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: "ALLE PROZESSE >";
+                color: #00ff66;
+                font-size: 10px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+                clicked => root.prozessliste-oeffnen();
+            }
+        }
+
+        Text {
+            x: parent.width - 245px;
+            width: 225px;
+            height: parent.height;
+            text: "HOST: " + root.hostname;
+            color: #8cffaa;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 22px;
+        y: 102px;
+        width: parent.width - 44px;
+        height: 118px;
+        background: #021008;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+            width: 400px;
+            height: 18px;
+            text: "AKTUELLER PROZESS-SICHERHEITSSTATUS";
+            color: #3c8d58;
+            font-size: 9px;
+        }
+
+        Text {
+            x: 16px;
+            y: 42px;
+            width: parent.width - 360px;
+            height: 38px;
+            text: root.prozess-status;
+            color: #00ff66;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        Text {
+            x: 16px;
+            y: 85px;
+            width: 620px;
+            height: 20px;
+            text: "Analyse lokal auf diesem Gerät // keine automatische Prozessbeendigung";
+            color: #57b578;
+            font-size: 9px;
+        }
+
+        if root.prozess-detail-verfuegbar : Rectangle {
+            x: parent.width - 235px;
+            y: 38px;
+            width: 215px;
+            height: 42px;
+            background: #010604;
+            border-color: #00ff66;
+            border-width: 1px;
+
+            Text {
+                width: parent.width;
+                height: parent.height;
+                text: "HÖCHSTES RISIKO ÖFFNEN >";
+                color: #00ff66;
+                font-size: 9px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            TouchArea {
+                width: parent.width;
+                height: parent.height;
+                clicked => root.prozess-detail-oeffnen();
+            }
+        }
+    }
+
+    HorizontalLayout {
+        x: 22px;
+        y: 236px;
+        width: parent.width - 44px;
+        height: 82px;
+        spacing: 14px;
+
+        for item in [
+            { title: "PROZESSE GEPRÜFT", value: root.prozess-geprueft },
+            { title: "MIT HINWEISEN", value: root.prozess-hinweise },
+            { title: "PRÜFUNG EMPFOHLEN", value: root.prozess-pruefung },
+            { title: "HOHE AUFFÄLLIGKEIT", value: root.prozess-hoch },
+            { title: "HÖCHSTES RISIKO", value: root.prozess-hoechstes-risiko }
+        ] : Rectangle {
+            horizontal-stretch: 1;
+            background: #021008;
+            border-color: #0b5c2b;
+            border-width: 1px;
+
+            Text {
+                x: 14px;
+                y: 10px;
+                width: parent.width - 28px;
+                height: 16px;
+                text: item.title;
+                color: #3c8d58;
+                font-size: 9px;
+            }
+
+            Text {
+                x: 14px;
+                y: 34px;
+                width: parent.width - 28px;
+                height: 30px;
+                text: item.value;
+                color: #00ff66;
+                font-size: 20px;
+                font-weight: 700;
+            }
+        }
+    }
+
+    Rectangle {
+        x: 22px;
+        y: 336px;
+        width: 345px;
+        height: parent.height - 354px;
+        background: #021008;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+            width: parent.width - 32px;
+            height: 20px;
+            text: "RISIKOMODELL";
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle { x: 16px; y: 46px; width: parent.width - 32px; height: 1px; background: #0b5c2b; }
+
+        Text {
+            x: 16px;
+            y: 66px;
+            width: parent.width - 32px;
+            height: 125px;
+            text: "0 – 29          UNAUFFÄLLIG\n\n30 – 59        BEOBACHTEN\n\n60 – 79        PRÜFUNG EMPFOHLEN\n\n80 – 100      HOHE AUFFÄLLIGKEIT";
+            color: #8cffaa;
+            font-size: 10px;
+        }
+
+        Rectangle { x: 16px; y: 200px; width: parent.width - 32px; height: 1px; background: #0b5c2b; }
+
+        Text {
+            x: 16px;
+            y: 220px;
+            width: parent.width - 32px;
+            height: 18px;
+            text: "ANALYSESIGNALE";
+            color: #3c8d58;
+            font-size: 9px;
+        }
+
+        Text {
+            x: 16px;
+            y: 252px;
+            width: parent.width - 32px;
+            height: 120px;
+            text: "● Temporäres Verzeichnis\n● Cache-Verzeichnis\n● Downloads\n● Signatur fehlt\n● Signatur ungültig\n● Ungewöhnliche Dateirechte";
+            color: #00ff66;
+            font-size: 9px;
+        }
+    }
+
+    Rectangle {
+        x: 382px;
+        y: 336px;
+        width: parent.width - 404px;
+        height: parent.height - 354px;
+        background: #021008;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+            width: parent.width - 32px;
+            height: 20px;
+            text: "PROZESSE MIT PRÜFBEDARF // RISIKO ≥ 60";
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle { x: 16px; y: 46px; width: parent.width - 32px; height: 1px; background: #0b5c2b; }
+
+        Rectangle {
+            x: 16px;
+            y: 62px;
+            width: parent.width - 32px;
+            height: 34px;
+            background: #010604;
+
+            Text {
+                x: 10px;
+                width: parent.width - 20px;
+                height: parent.height;
+                text: "PID | PROZESS | RISIKO | SIGNATUR | GRUND | STATUS";
+                color: #57b578;
+                font-size: 9px;
+                font-weight: 700;
+                vertical-alignment: center;
+            }
+        }
+
+        Text {
+            x: 26px;
+            y: 108px;
+            width: parent.width - 52px;
+            height: parent.height - 145px;
+            text: root.prozess-tabelle;
+            color: #00ff66;
+            font-size: 9px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            x: 16px;
+            y: parent.height - 32px;
+            width: parent.width - 32px;
+            height: 18px;
+            text: "Nur Prozesse mit Prüfbedarf werden hier geladen.";
+            color: #3c8d58;
+            font-size: 8px;
+        }
+    }
+}

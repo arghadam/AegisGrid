@@ -1,0 +1,12 @@
+[package]
+name = "infrastructure_security"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+application = { workspace = true }
+domain = { workspace = true }
+netstat2 = { workspace = true }
+sha2 = { workspace = true }
+sysinfo = { workspace = true }

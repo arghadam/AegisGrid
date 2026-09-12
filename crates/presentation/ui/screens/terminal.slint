@@ -1,0 +1,176 @@
+component TerminalButton inherits Rectangle {
+    in property <string> text: "";
+    callback clicked();
+
+    background: #03140a;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        width: parent.width;
+        height: parent.height;
+        text: root.text;
+        color: #00ff66;
+        font-size: 11px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        clicked => root.clicked();
+    }
+}
+
+export component TerminalScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in-out property <string> eingabe: "";
+    in property <string> ausgabe: "AEGISGRID TERMINAL BEREIT";
+    in property <string> status: "BEREIT";
+
+    callback ausfuehren(string);
+    callback leeren();
+    callback zurueck();
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        TerminalButton {
+            x: 14px;
+            y: 14px;
+            width: 120px;
+            height: 40px;
+            text: "< DASHBOARD";
+            clicked => root.zurueck();
+        }
+
+        Text {
+            x: 154px;
+            width: 520px;
+            height: parent.height;
+            text: "AEGISGRID // LOKALES TERMINAL";
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 360px;
+            width: 340px;
+            height: parent.height;
+            text: "HOST: " + root.hostname + " // " + root.status;
+            color: #8cffaa;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 104px;
+        width: parent.width - 36px;
+        height: parent.height - 206px;
+        background: #000402;
+        border-color: #0b5c2b;
+        border-width: 1px;
+        clip: true;
+
+        Text {
+            x: 16px;
+            y: 14px;
+            width: parent.width - 32px;
+            height: parent.height - 28px;
+            text: root.ausgabe;
+            color: #00ff66;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: parent.height - 86px;
+        width: parent.width - 300px;
+        height: 54px;
+        background: #010805;
+        border-color: command-input.has-focus ? #00ff66 : #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 12px;
+            y: 0px;
+            width: 20px;
+            height: parent.height;
+            text: ">";
+            color: #00ff66;
+            font-size: 16px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        command-input := TextInput {
+            x: 34px;
+            y: 8px;
+            width: parent.width - 46px;
+            height: parent.height - 16px;
+            text <=> root.eingabe;
+            color: #00ff66;
+            font-size: 12px;
+            single-line: true;
+
+            accepted => {
+                root.ausfuehren(root.eingabe);
+                root.eingabe = "";
+            }
+        }
+    }
+
+    TerminalButton {
+        x: parent.width - 266px;
+        y: parent.height - 86px;
+        width: 120px;
+        height: 54px;
+        text: "AUSFÜHREN >";
+        clicked => {
+            root.ausfuehren(root.eingabe);
+            root.eingabe = "";
+        }
+    }
+
+    TerminalButton {
+        x: parent.width - 132px;
+        y: parent.height - 86px;
+        width: 114px;
+        height: 54px;
+        text: "LEEREN";
+        clicked => root.leeren();
+    }
+}

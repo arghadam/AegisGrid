@@ -1,0 +1,322 @@
+import { EingabeFeld } from "../components/eingabe_feld.slint";
+
+component SettingsButton inherits Rectangle {
+    in property <string> text: "";
+    callback clicked();
+    background: #03140a;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        width: parent.width;
+        height: parent.height;
+        text: root.text;
+        color: #00ff66;
+        font-size: 11px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        clicked => root.clicked();
+    }
+}
+
+export component SettingsScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in property <string> benutzername: "—";
+    in-out property <bool> animation-aktiv: true;
+    in-out property <int> auto-lock-minuten: 5;
+    in-out property <string> aktuelles-kennwort: "";
+    in-out property <string> neues-kennwort: "";
+    in-out property <string> neues-kennwort-bestaetigung: "";
+    in property <string> statusmeldung: "";
+
+    callback animation-umschalten();
+    callback auto-lock-setzen(int);
+    callback kennwort-aendern(string, string, string, string);
+    callback integritaets-basiswert-neu();
+    callback zurueck();
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        SettingsButton {
+            x: 14px;
+            y: 14px;
+            width: 120px;
+            height: 40px;
+            text: "< DASHBOARD";
+            clicked => root.zurueck();
+        }
+
+        Text {
+            x: 154px;
+            width: 520px;
+            height: parent.height;
+            text: "AEGISGRID // EINSTELLUNGEN";
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        Text {
+            x: parent.width - 330px;
+            width: 310px;
+            height: parent.height;
+            text: "BENUTZER: " + root.benutzername + " // HOST: " + root.hostname;
+            color: #8cffaa;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 104px;
+        width: 390px;
+        height: parent.height - 122px;
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 14px;
+            width: parent.width - 32px;
+            height: 20px;
+            text: "DARSTELLUNG & ENERGIE";
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 16px;
+            y: 44px;
+            width: parent.width - 32px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        SettingsButton {
+            x: 16px;
+            y: 68px;
+            width: parent.width - 32px;
+            height: 48px;
+            text: root.animation-aktiv ? "3D-HUD-ANIMATION: AKTIV" : "3D-HUD-ANIMATION: AUS";
+            clicked => root.animation-umschalten();
+        }
+
+        Text {
+            x: 16px;
+            y: 146px;
+            width: parent.width - 32px;
+            height: 36px;
+            text: "AUTO-SPERRE BEI HINTERGRUNDBETRIEB";
+            color: #57b578;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        SettingsButton {
+            x: 16px;
+            y: 192px;
+            width: 78px;
+            height: 42px;
+            text: "AUS";
+            clicked => root.auto-lock-setzen(0);
+        }
+
+        SettingsButton {
+            x: 104px;
+            y: 192px;
+            width: 78px;
+            height: 42px;
+            text: "5 MIN";
+            clicked => root.auto-lock-setzen(5);
+        }
+
+        SettingsButton {
+            x: 192px;
+            y: 192px;
+            width: 78px;
+            height: 42px;
+            text: "15 MIN";
+            clicked => root.auto-lock-setzen(15);
+        }
+
+        SettingsButton {
+            x: 280px;
+            y: 192px;
+            width: 78px;
+            height: 42px;
+            text: "30 MIN";
+            clicked => root.auto-lock-setzen(30);
+        }
+
+        Text {
+            x: 16px;
+            y: 256px;
+            width: parent.width - 32px;
+            height: 44px;
+            text: root.auto-lock-minuten == 0 ? "AKTUELL: AUTO-SPERRE AUS" : "AUTO-SPERRE IST AKTIV";
+            color: #8cffaa;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            x: 16px;
+            y: 326px;
+            width: parent.width - 32px;
+            height: 120px;
+            text: "PERFORMANCE\n\n• 3D-HUD ca. 20 FPS\n• Animation pausiert im Hintergrund\n• Monitoring wird adaptiv gedrosselt\n• Security-Prüfungen sind gecacht";
+            color: #57b578;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+
+
+        SettingsButton {
+            x: 16px;
+            y: 470px;
+            width: parent.width - 32px;
+            height: 46px;
+            text: "DATEI-INTEGRITÄT: BASISWERT NEU SETZEN";
+            clicked => root.integritaets-basiswert-neu();
+        }
+
+        Text {
+            x: 16px;
+            y: 532px;
+            width: parent.width - 32px;
+            height: 68px;
+            text: "Nur nach einem bewusst installierten AegisGrid-Update verwenden. Der neue SHA-256-Basiswert wird persistent gespeichert.";
+            color: #57b578;
+            font-size: 9px;
+            wrap: word-wrap;
+        }
+    }
+
+    Rectangle {
+        x: 426px;
+        y: 104px;
+        width: parent.width - 444px;
+        height: parent.height - 122px;
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 14px;
+            width: parent.width - 32px;
+            height: 20px;
+            text: "KENNWORT ÄNDERN";
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 16px;
+            y: 44px;
+            width: parent.width - 32px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        EingabeFeld {
+            x: 16px;
+            y: 70px;
+            width: parent.width - 32px;
+            label: "AKTUELLES KENNWORT";
+            wert <=> root.aktuelles-kennwort;
+            kennwort: true;
+        }
+
+        EingabeFeld {
+            x: 16px;
+            y: 160px;
+            width: parent.width - 32px;
+            label: "NEUES KENNWORT // MINDESTENS 12 ZEICHEN";
+            wert <=> root.neues-kennwort;
+            kennwort: true;
+        }
+
+        EingabeFeld {
+            x: 16px;
+            y: 250px;
+            width: parent.width - 32px;
+            label: "NEUES KENNWORT BESTÄTIGEN";
+            wert <=> root.neues-kennwort-bestaetigung;
+            kennwort: true;
+        }
+
+        Text {
+            x: 16px;
+            y: 344px;
+            width: parent.width - 32px;
+            height: 50px;
+            text: root.statusmeldung;
+            color: #ff6b6b;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+
+        SettingsButton {
+            x: 16px;
+            y: 414px;
+            width: parent.width - 32px;
+            height: 52px;
+            text: "KENNWORT SICHER ÄNDERN >";
+            clicked => root.kennwort-aendern(
+                root.benutzername,
+                root.aktuelles-kennwort,
+                root.neues-kennwort,
+                root.neues-kennwort-bestaetigung
+            );
+        }
+
+        Text {
+            x: 16px;
+            y: 492px;
+            width: parent.width - 32px;
+            height: 100px;
+            text: "SICHERHEIT\n\nKennwort-Hashes werden mit Argon2 verarbeitet und müssen mit dem OS-Keyring übereinstimmen. Klartextkennwörter werden weder protokolliert noch gespeichert.";
+            color: #57b578;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+    }
+}

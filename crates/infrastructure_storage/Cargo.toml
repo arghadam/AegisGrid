@@ -1,0 +1,11 @@
+[package]
+name = "infrastructure_storage"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+async-trait = { workspace = true }
+application = { workspace = true }
+domain = { workspace = true }
+sqlx = { workspace = true }

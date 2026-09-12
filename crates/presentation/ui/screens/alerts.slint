@@ -1,0 +1,207 @@
+component AlertButton inherits Rectangle {
+    in property <string> text: "";
+    callback clicked();
+    background: #03140a;
+    border-color: #0b5c2b;
+    border-width: 1px;
+
+    Text {
+        width: parent.width;
+        height: parent.height;
+        text: root.text;
+        color: #00ff66;
+        font-size: 11px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        clicked => root.clicked();
+    }
+}
+
+export component AlertsScreen inherits Rectangle {
+    in property <string> hostname: "—";
+    in property <string> threat-status: "—";
+    in property <string> warning-count: "0";
+    in property <string> status: "BEREIT";
+    in property <string> verlauf: "NOCH KEINE SICHERHEITSEREIGNISSE";
+
+    callback aktualisieren();
+    callback zurueck();
+
+    background: #010604;
+
+    for grid-x in 24 : Rectangle {
+        x: grid-x * 64px;
+        width: 1px;
+        height: parent.height;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    for grid-y in 16 : Rectangle {
+        y: grid-y * 56px;
+        width: parent.width;
+        height: 1px;
+        background: #06351a;
+        opacity: 0.10;
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 18px;
+        width: parent.width - 36px;
+        height: 68px;
+        background: #03140a;
+        border-color: #00ff66;
+        border-width: 1px;
+
+        AlertButton {
+            x: 14px;
+            y: 14px;
+            width: 120px;
+            height: 40px;
+            text: "< DASHBOARD";
+            clicked => root.zurueck();
+        }
+
+        Text {
+            x: 154px;
+            width: 520px;
+            height: parent.height;
+            text: "AEGISGRID // SICHERHEITSEREIGNISSE";
+            color: #00ff66;
+            font-size: 19px;
+            font-weight: 700;
+            vertical-alignment: center;
+        }
+
+        AlertButton {
+            x: parent.width - 350px;
+            y: 14px;
+            width: 150px;
+            height: 40px;
+            text: "AKTUALISIEREN";
+            clicked => root.aktualisieren();
+        }
+
+        Text {
+            x: parent.width - 190px;
+            width: 170px;
+            height: parent.height;
+            text: "HOST: " + root.hostname;
+            color: #8cffaa;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 102px;
+        width: parent.width - 36px;
+        height: 84px;
+        background: #020906;
+        border-color: #0b5c2b;
+        border-width: 1px;
+
+        Text {
+            x: 16px;
+            y: 12px;
+            width: 280px;
+            height: 18px;
+            text: "AKTUELLER BEDROHUNGSSTATUS";
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 16px;
+            y: 36px;
+            width: 420px;
+            height: 32px;
+            text: root.threat-status;
+            color: #00ff66;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        Text {
+            x: 460px;
+            y: 12px;
+            width: 220px;
+            height: 18px;
+            text: "AKTUELLE WARNUNGEN";
+            color: #3c8d58;
+            font-size: 10px;
+        }
+
+        Text {
+            x: 460px;
+            y: 36px;
+            width: 220px;
+            height: 32px;
+            text: root.warning-count;
+            color: #00ff66;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        Text {
+            x: parent.width - 320px;
+            width: 300px;
+            height: parent.height;
+            text: root.status;
+            color: #57b578;
+            font-size: 10px;
+            horizontal-alignment: right;
+            vertical-alignment: center;
+        }
+    }
+
+    Rectangle {
+        x: 18px;
+        y: 202px;
+        width: parent.width - 36px;
+        height: parent.height - 220px;
+        background: #000402;
+        border-color: #0b5c2b;
+        border-width: 1px;
+        clip: true;
+
+        Text {
+            x: 14px;
+            y: 12px;
+            width: parent.width - 28px;
+            height: 20px;
+            text: "PERSISTENTER SECURITY-VERLAUF // SQLITE";
+            color: #57b578;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        Rectangle {
+            x: 14px;
+            y: 40px;
+            width: parent.width - 28px;
+            height: 1px;
+            background: #0b5c2b;
+        }
+
+        Text {
+            x: 14px;
+            y: 54px;
+            width: parent.width - 28px;
+            height: parent.height - 68px;
+            text: root.verlauf;
+            color: #00ff66;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+    }
+}

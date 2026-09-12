@@ -1,0 +1,16 @@
+[package]
+name = "infrastructure_auth"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+async-trait = { workspace = true }
+application = { workspace = true }
+domain = { workspace = true }
+argon2 = { workspace = true }
+keyring = { workspace = true }
+tokio = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+localauthentication = { package = "apple-localauthentication", version = "=0.3.5" }

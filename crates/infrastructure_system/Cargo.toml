@@ -1,0 +1,10 @@
+[package]
+name = "infrastructure_system"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+application = { workspace = true }
+domain = { workspace = true }
+sysinfo = { workspace = true }

@@ -188,10 +188,10 @@ fn load_integrity_baseline(path: &Path) -> Option<[u8; 32]> {
 }
 
 fn store_integrity_baseline(path: &Path, hash: &[u8; 32]) -> bool {
-    if let Some(parent) = path.parent() {
-        if fs::create_dir_all(parent).is_err() {
-            return false;
-        }
+    if let Some(parent) = path.parent()
+        && fs::create_dir_all(parent).is_err()
+    {
+        return false;
     }
 
     let temporary = path.with_extension("tmp");

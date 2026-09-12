@@ -35,18 +35,20 @@ impl Default for SysinfoNetworkMonitor {
 impl NetworkMonitor for SysinfoNetworkMonitor {
     fn snapshot(&mut self) -> NetworkSnapshot {
         let elapsed = self.last_refresh.elapsed().as_secs_f64().max(0.001);
+
         self.networks.refresh(true);
         self.last_refresh = Instant::now();
 
         let received = self
             .networks
-            .iter()
-            .map(|(_, data)| data.received())
+            .values()
+            .map(|data| data.received())
             .sum::<u64>();
+
         let transmitted = self
             .networks
-            .iter()
-            .map(|(_, data)| data.transmitted())
+            .values()
+            .map(|data| data.transmitted())
             .sum::<u64>();
 
         if self.last_connection_refresh.elapsed() >= CONNECTION_REFRESH_INTERVAL {

@@ -387,9 +387,9 @@ impl ProcessSecurityAnalyzer {
             });
         }
 
-        suspicious_processes.sort_by(|left, right| right.risk_score.cmp(&left.risk_score));
+        suspicious_processes.sort_by_key(|process| std::cmp::Reverse(process.risk_score));
 
-        observed_processes.sort_by(|left, right| right.score.cmp(&left.score));
+        observed_processes.sort_by_key(|process| std::cmp::Reverse(process.score));
 
         self.cached_snapshot = ProcessSecuritySnapshot {
             analyzed_process_count,
@@ -403,10 +403,10 @@ impl ProcessSecurityAnalyzer {
     }
 
     fn signature_status(&mut self, path: &Path) -> CodeSignatureStatus {
-        if let Some(cached) = self.signature_cache.get(path) {
-            if cached.checked_at.elapsed() < SIGNATURE_CACHE_DURATION {
-                return cached.status;
-            }
+        if let Some(cached) = self.signature_cache.get(path)
+            && cached.checked_at.elapsed() < SIGNATURE_CACHE_DURATION
+        {
+            return cached.status;
         }
 
         let status = check_code_signature(path);
@@ -424,10 +424,10 @@ impl ProcessSecurityAnalyzer {
     }
 
     fn signature_metadata(&mut self, path: &Path) -> CodeSignatureMetadata {
-        if let Some(cached) = self.signature_metadata_cache.get(path) {
-            if cached.checked_at.elapsed() < SIGNATURE_METADATA_CACHE_DURATION {
-                return cached.metadata.clone();
-            }
+        if let Some(cached) = self.signature_metadata_cache.get(path)
+            && cached.checked_at.elapsed() < SIGNATURE_METADATA_CACHE_DURATION
+        {
+            return cached.metadata.clone();
         }
 
         let metadata = read_code_signature_metadata(path);

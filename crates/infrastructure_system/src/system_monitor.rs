@@ -115,7 +115,7 @@ fn storage_values(disks: &Disks) -> (u64, u64) {
             );
         }
 
-        return (0, 0);
+        (0, 0)
     }
 
     #[cfg(not(target_os = "macos"))]

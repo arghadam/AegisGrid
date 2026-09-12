@@ -1,17 +1,6 @@
 use application::ports::SecurityMonitor;
-use domain::security::{
-    FileIntegrityStatus,
-    FirewallStatus,
-    SecuritySnapshot,
-    ThreatStatus,
-};
-use netstat2::{
-    get_sockets_info,
-    AddressFamilyFlags,
-    ProtocolFlags,
-    ProtocolSocketInfo,
-    TcpState,
-};
+use domain::security::{FileIntegrityStatus, FirewallStatus, SecuritySnapshot, ThreatStatus};
+use netstat2::{AddressFamilyFlags, ProtocolFlags, ProtocolSocketInfo, TcpState, get_sockets_info};
 use sha2::{Digest, Sha256};
 use std::{
     fs::{self, File},
@@ -47,9 +36,7 @@ impl LocalSecurityMonitor {
             baseline_hash,
             cached_integrity: FileIntegrityStatus::Unknown,
             cached_firewall: FirewallStatus::Unknown,
-            last_integrity_check: now
-                .checked_sub(FILE_INTEGRITY_INTERVAL)
-                .unwrap_or(now),
+            last_integrity_check: now.checked_sub(FILE_INTEGRITY_INTERVAL).unwrap_or(now),
             last_firewall_check: now.checked_sub(FIREWALL_INTERVAL).unwrap_or(now),
         }
     }

@@ -17,13 +17,7 @@ pub fn read_hardware_details() -> HardwareDetailsSnapshot {
     let cpu = system
         .cpus()
         .first()
-        .map(|cpu| {
-            format!(
-                "{} // {} MHz",
-                cpu.brand(),
-                cpu.frequency(),
-            )
-        })
+        .map(|cpu| format!("{} // {} MHz", cpu.brand(), cpu.frequency(),))
         .unwrap_or_else(|| "UNBEKANNT".to_owned());
 
     let physical = System::physical_core_count()
@@ -31,11 +25,7 @@ pub fn read_hardware_details() -> HardwareDetailsSnapshot {
         .unwrap_or_else(|| "—".to_owned());
 
     let logical = system.cpus().len();
-    let cores = format!(
-        "PHYSISCH: {} // LOGISCH: {}",
-        physical,
-        logical,
-    );
+    let cores = format!("PHYSISCH: {} // LOGISCH: {}", physical, logical,);
 
     let gib = 1024.0 * 1024.0 * 1024.0;
     let memory = format!(
@@ -73,12 +63,7 @@ pub fn read_hardware_details() -> HardwareDetailsSnapshot {
                     .map(|value| format!(" // KRITISCH {:.1} °C", value))
                     .unwrap_or_default();
 
-                format!(
-                    "{} | {:.1} °C{}",
-                    component.label(),
-                    temperature,
-                    critical,
-                )
+                format!("{} | {:.1} °C{}", component.label(), temperature, critical,)
             })
         })
         .collect::<Vec<_>>();

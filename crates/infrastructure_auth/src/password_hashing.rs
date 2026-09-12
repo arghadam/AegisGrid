@@ -1,13 +1,9 @@
 use application::ports::PasswordHasher;
 use argon2::{
-    password_hash::{
-        rand_core::OsRng,
-        PasswordHash,
-        PasswordHasher as _,
-        PasswordVerifier,
-        SaltString,
-    },
     Argon2,
+    password_hash::{
+        PasswordHash, PasswordHasher as _, PasswordVerifier, SaltString, rand_core::OsRng,
+    },
 };
 use std::{error::Error, fmt};
 
@@ -42,11 +38,7 @@ impl PasswordHasher for Argon2PasswordHasher {
             .map_err(|error| PasswordHashingError(error.to_string()))
     }
 
-    fn verify_password(
-        &self,
-        password: &str,
-        password_hash: &str,
-    ) -> Result<bool, Self::Error> {
+    fn verify_password(&self, password: &str, password_hash: &str) -> Result<bool, Self::Error> {
         let parsed = PasswordHash::new(password_hash)
             .map_err(|error| PasswordHashingError(error.to_string()))?;
 

@@ -190,7 +190,6 @@ where
     }
 }
 
-
 #[derive(Debug)]
 pub enum ChangePasswordError<R, C, H> {
     AccountNotFound,
@@ -328,10 +327,12 @@ fn record_failure(username: &str) {
         return;
     };
 
-    let state = guard.entry(username.to_owned()).or_insert(LoginAttemptState {
-        failed_attempts: 0,
-        locked_until: None,
-    });
+    let state = guard
+        .entry(username.to_owned())
+        .or_insert(LoginAttemptState {
+            failed_attempts: 0,
+            locked_until: None,
+        });
 
     state.failed_attempts = state.failed_attempts.saturating_add(1);
 

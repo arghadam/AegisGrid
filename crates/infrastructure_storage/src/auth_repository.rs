@@ -19,11 +19,9 @@ impl AuthRepository for SqliteAuthRepository {
     type Error = sqlx::Error;
 
     async fn has_any_account(&self) -> Result<bool, Self::Error> {
-        let exists: i64 = sqlx::query_scalar(
-            "SELECT EXISTS(SELECT 1 FROM users LIMIT 1)",
-        )
-        .fetch_one(&self.pool)
-        .await?;
+        let exists: i64 = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM users LIMIT 1)")
+            .fetch_one(&self.pool)
+            .await?;
 
         Ok(exists != 0)
     }
@@ -32,12 +30,11 @@ impl AuthRepository for SqliteAuthRepository {
         &self,
         username: &str,
     ) -> Result<Option<StoredCredential>, Self::Error> {
-        let row = sqlx::query(
-            "SELECT id, username, password_hash FROM users WHERE username = ? LIMIT 1",
-        )
-        .bind(username)
-        .fetch_optional(&self.pool)
-        .await?;
+        let row =
+            sqlx::query("SELECT id, username, password_hash FROM users WHERE username = ? LIMIT 1")
+                .bind(username)
+                .fetch_optional(&self.pool)
+                .await?;
 
         Ok(row.map(|row| StoredCredential {
             user_id: row.get("id"),
@@ -51,13 +48,11 @@ impl AuthRepository for SqliteAuthRepository {
         username: &str,
         password_hash: &str,
     ) -> Result<UserAccount, Self::Error> {
-        let result = sqlx::query(
-            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
-        )
-        .bind(username)
-        .bind(password_hash)
-        .execute(&self.pool)
-        .await?;
+        let result = sqlx::query("INSERT INTO users (username, password_hash) VALUES (?, ?)")
+            .bind(username)
+            .bind(password_hash)
+            .execute(&self.pool)
+            .await?;
 
         Ok(UserAccount {
             id: result.last_insert_rowid(),
@@ -70,13 +65,11 @@ impl AuthRepository for SqliteAuthRepository {
         username: &str,
         password_hash: &str,
     ) -> Result<(), Self::Error> {
-        sqlx::query(
-            "UPDATE users SET password_hash = ? WHERE username = ?",
-        )
-        .bind(password_hash)
-        .bind(username)
-        .execute(&self.pool)
-        .await?;
+        sqlx::query("UPDATE users SET password_hash = ? WHERE username = ?")
+            .bind(password_hash)
+            .bind(username)
+            .execute(&self.pool)
+            .await?;
 
         Ok(())
     }

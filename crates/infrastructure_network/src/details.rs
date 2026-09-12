@@ -1,10 +1,4 @@
-use netstat2::{
-    get_sockets_info,
-    AddressFamilyFlags,
-    ProtocolFlags,
-    ProtocolSocketInfo,
-    TcpState,
-};
+use netstat2::{AddressFamilyFlags, ProtocolFlags, ProtocolSocketInfo, TcpState, get_sockets_info};
 use std::collections::HashSet;
 use sysinfo::{Pid, System};
 
@@ -16,10 +10,7 @@ pub struct NetworkDetailsSnapshot {
     pub listening_ports_table: String,
 }
 
-pub fn read_network_details(
-    connection_limit: usize,
-    port_limit: usize,
-) -> NetworkDetailsSnapshot {
+pub fn read_network_details(connection_limit: usize, port_limit: usize) -> NetworkDetailsSnapshot {
     let af = AddressFamilyFlags::IPV4 | AddressFamilyFlags::IPV6;
     let proto = ProtocolFlags::TCP | ProtocolFlags::UDP;
 
@@ -48,9 +39,7 @@ pub fn read_network_details(
                     if unique_ports.insert(key) {
                         port_rows.push(format!(
                             "TCP | {}:{} | {}",
-                            tcp.local_addr,
-                            tcp.local_port,
-                            process,
+                            tcp.local_addr, tcp.local_port, process,
                         ));
                     }
                 } else {
@@ -70,17 +59,13 @@ pub fn read_network_details(
                 if unique_ports.insert(key) {
                     port_rows.push(format!(
                         "UDP | {}:{} | {}",
-                        udp.local_addr,
-                        udp.local_port,
-                        process,
+                        udp.local_addr, udp.local_port, process,
                     ));
                 }
 
                 connection_rows.push(format!(
                     "UDP | {}:{} | {}",
-                    udp.local_addr,
-                    udp.local_port,
-                    process,
+                    udp.local_addr, udp.local_port, process,
                 ));
             }
         }
@@ -100,11 +85,7 @@ pub fn read_network_details(
             connection_limit,
             "KEINE AKTIVEN VERBINDUNGEN",
         ),
-        listening_ports_table: render_rows(
-            &port_rows,
-            port_limit,
-            "KEINE OFFENEN PORTS ERKANNT",
-        ),
+        listening_ports_table: render_rows(&port_rows, port_limit, "KEINE OFFENEN PORTS ERKANNT"),
     }
 }
 

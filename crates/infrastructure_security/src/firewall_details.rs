@@ -15,37 +15,20 @@ pub fn read_firewall_details() -> FirewallDetailsSnapshot {
 fn platform_firewall_details() -> FirewallDetailsSnapshot {
     const TOOL: &str = "/usr/libexec/ApplicationFirewall/socketfilterfw";
 
-    let status = run_command(
-        TOOL,
-        &["--getglobalstate"],
-    )
-    .unwrap_or_else(|| "FIREWALL-STATUS NICHT VERFÜGBAR".to_owned());
+    let status = run_command(TOOL, &["--getglobalstate"])
+        .unwrap_or_else(|| "FIREWALL-STATUS NICHT VERFÜGBAR".to_owned());
 
-    let stealth = run_command(
-        TOOL,
-        &["--getstealthmode"],
-    )
-    .unwrap_or_else(|| "STEALTH-MODUS NICHT VERFÜGBAR".to_owned());
+    let stealth = run_command(TOOL, &["--getstealthmode"])
+        .unwrap_or_else(|| "STEALTH-MODUS NICHT VERFÜGBAR".to_owned());
 
-    let signed = run_command(
-        TOOL,
-        &["--getallowsigned"],
-    )
-    .unwrap_or_else(|| "SIGNIERTE APPS: STATUS NICHT VERFÜGBAR".to_owned());
+    let signed = run_command(TOOL, &["--getallowsigned"])
+        .unwrap_or_else(|| "SIGNIERTE APPS: STATUS NICHT VERFÜGBAR".to_owned());
 
-    let profiles = format!(
-        "{}\n{}\n{}",
-        status,
-        stealth,
-        signed,
-    );
+    let profiles = format!("{}\n{}\n{}", status, stealth, signed,);
 
-    let rules = run_command(
-        TOOL,
-        &["--listapps"],
-    )
-    .map(|value| truncate_lines(&value, 80))
-    .unwrap_or_else(|| "FIREWALL-REGELN NICHT VERFÜGBAR".to_owned());
+    let rules = run_command(TOOL, &["--listapps"])
+        .map(|value| truncate_lines(&value, 80))
+        .unwrap_or_else(|| "FIREWALL-REGELN NICHT VERFÜGBAR".to_owned());
 
     FirewallDetailsSnapshot {
         status,
@@ -56,11 +39,9 @@ fn platform_firewall_details() -> FirewallDetailsSnapshot {
 
 #[cfg(target_os = "windows")]
 fn platform_firewall_details() -> FirewallDetailsSnapshot {
-    let profiles_script =
-        "Get-NetFirewallProfile | Select-Object Name,Enabled,DefaultInboundAction,DefaultOutboundAction | Format-Table -AutoSize | Out-String -Width 220";
+    let profiles_script = "Get-NetFirewallProfile | Select-Object Name,Enabled,DefaultInboundAction,DefaultOutboundAction | Format-Table -AutoSize | Out-String -Width 220";
 
-    let rules_script =
-        "Get-NetFirewallRule -Enabled True | Select-Object -First 80 DisplayName,Direction,Action,Profile | Format-Table -AutoSize | Out-String -Width 220";
+    let rules_script = "Get-NetFirewallRule -Enabled True | Select-Object -First 80 DisplayName,Direction,Action,Profile | Format-Table -AutoSize | Out-String -Width 220";
 
     let profiles = run_command(
         "powershell",
@@ -98,28 +79,17 @@ fn platform_firewall_details() -> FirewallDetailsSnapshot {
 }
 
 fn run_command(program: &str, args: &[&str]) -> Option<String> {
-    let output = Command::new(program)
-        .args(args)
-        .output()
-        .ok()?;
+    let output = Command::new(program).args(args).output().ok()?;
 
-    let mut text = String::from_utf8_lossy(&output.stdout)
-        .trim()
-        .to_owned();
+    let mut text = String::from_utf8_lossy(&output.stdout).trim().to_owned();
 
-    let stderr = String::from_utf8_lossy(&output.stderr)
-        .trim()
-        .to_owned();
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_owned();
 
     if text.is_empty() && !stderr.is_empty() {
         text = stderr;
     }
 
-    if text.is_empty() {
-        None
-    } else {
-        Some(text)
-    }
+    if text.is_empty() { None } else { Some(text) }
 }
 
 fn truncate_lines(value: &str, maximum: usize) -> String {

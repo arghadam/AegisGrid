@@ -50,11 +50,7 @@ pub struct ProcessRiskAssessment {
 }
 
 impl ProcessRiskAssessment {
-    pub fn new(
-        pid: u32,
-        name: impl Into<String>,
-        signals: Vec<ProcessRiskSignal>,
-    ) -> Self {
+    pub fn new(pid: u32, name: impl Into<String>, signals: Vec<ProcessRiskSignal>) -> Self {
         let mut unique = Vec::with_capacity(signals.len());
 
         for signal in signals {
@@ -99,11 +95,8 @@ mod tests {
 
     #[test]
     fn observe_score_is_classified_correctly() {
-        let assessment = ProcessRiskAssessment::new(
-            1,
-            "observe",
-            vec![ProcessRiskSignal::TemporaryDirectory],
-        );
+        let assessment =
+            ProcessRiskAssessment::new(1, "observe", vec![ProcessRiskSignal::TemporaryDirectory]);
         assert_eq!(assessment.score, 30);
         assert_eq!(assessment.level, ProcessRiskLevel::Observe);
     }

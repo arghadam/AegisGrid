@@ -1,9 +1,5 @@
 use crate::ports::{NetworkMonitor, SecurityMonitor, SystemMonitor};
-use domain::{
-    network::NetworkSnapshot,
-    security::SecuritySnapshot,
-    system::SystemSnapshot,
-};
+use domain::{network::NetworkSnapshot, security::SecuritySnapshot, system::SystemSnapshot};
 
 pub struct ReadSystemSnapshot<M> {
     monitor: M,

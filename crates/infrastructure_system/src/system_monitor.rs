@@ -64,10 +64,8 @@ impl SystemMonitor for SysinfoSystemMonitor {
         self.system.refresh_memory();
 
         if self.last_process_refresh.elapsed() >= PROCESS_REFRESH_INTERVAL {
-            self.system.refresh_processes(
-                sysinfo::ProcessesToUpdate::All,
-                true,
-            );
+            self.system
+                .refresh_processes(sysinfo::ProcessesToUpdate::All, true);
             self.cached_process_count = self.system.processes().len();
             self.last_process_refresh = Instant::now();
         }
@@ -110,10 +108,7 @@ fn storage_values(disks: &Disks) -> (u64, u64) {
 
         // Defensive fallback for unusual macOS mount configurations: use the
         // largest reported volume instead of summing APFS sibling volumes.
-        if let Some(largest_disk) = disks
-            .iter()
-            .max_by_key(|disk| disk.total_space())
-        {
+        if let Some(largest_disk) = disks.iter().max_by_key(|disk| disk.total_space()) {
             return single_disk_storage_values(
                 largest_disk.total_space(),
                 largest_disk.available_space(),
@@ -125,26 +120,14 @@ fn storage_values(disks: &Disks) -> (u64, u64) {
 
     #[cfg(not(target_os = "macos"))]
     {
-        let total = disks
-            .iter()
-            .map(|disk| disk.total_space())
-            .sum::<u64>();
+        let total = disks.iter().map(|disk| disk.total_space()).sum::<u64>();
 
-        let available = disks
-            .iter()
-            .map(|disk| disk.available_space())
-            .sum::<u64>();
+        let available = disks.iter().map(|disk| disk.available_space()).sum::<u64>();
 
         (total.saturating_sub(available), total)
     }
 }
 
-fn single_disk_storage_values(
-    total: u64,
-    available: u64,
-) -> (u64, u64) {
-    (
-        total.saturating_sub(available),
-        total,
-    )
+fn single_disk_storage_values(total: u64, available: u64) -> (u64, u64) {
+    (total.saturating_sub(available), total)
 }

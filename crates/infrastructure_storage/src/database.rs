@@ -1,6 +1,6 @@
 use sqlx::{
-    sqlite::{SqliteConnectOptions, SqlitePoolOptions},
     SqlitePool,
+    sqlite::{SqliteConnectOptions, SqlitePoolOptions},
 };
 use std::path::PathBuf;
 
@@ -47,11 +47,9 @@ pub async fn open_database() -> Result<SqlitePool, sqlx::Error> {
     .execute(&pool)
     .await?;
 
-    sqlx::query(
-        "CREATE INDEX IF NOT EXISTS idx_security_events_id ON security_events(id DESC)",
-    )
-    .execute(&pool)
-    .await?;
+    sqlx::query("CREATE INDEX IF NOT EXISTS idx_security_events_id ON security_events(id DESC)")
+        .execute(&pool)
+        .await?;
 
     sqlx::query(
         r#"
@@ -78,9 +76,7 @@ fn database_path() -> PathBuf {
     #[cfg(not(target_os = "windows"))]
     {
         if let Some(home) = std::env::var_os("HOME") {
-            return PathBuf::from(home)
-                .join(".aegisgrid")
-                .join("aegisgrid.db");
+            return PathBuf::from(home).join(".aegisgrid").join("aegisgrid.db");
         }
     }
 

@@ -32,8 +32,7 @@ impl BiometricAuthenticator for MacOsBiometricAuthenticator {
         tokio::task::spawn_blocking(|| {
             use localauthentication::prelude::*;
 
-            let context = LAContext::new()
-                .map_err(|error| BiometricError(error.to_string()))?;
+            let context = LAContext::new().map_err(|error| BiometricError(error.to_string()))?;
 
             context
                 .can_evaluate_policy(LAPolicy::DeviceOwnerAuthenticationWithBiometrics)
@@ -49,14 +48,10 @@ impl BiometricAuthenticator for MacOsBiometricAuthenticator {
         tokio::task::spawn_blocking(move || {
             use localauthentication::prelude::*;
 
-            let context = LAContext::new()
-                .map_err(|error| BiometricError(error.to_string()))?;
+            let context = LAContext::new().map_err(|error| BiometricError(error.to_string()))?;
 
             context
-                .evaluate_policy(
-                    LAPolicy::DeviceOwnerAuthenticationWithBiometrics,
-                    &reason,
-                )
+                .evaluate_policy(LAPolicy::DeviceOwnerAuthenticationWithBiometrics, &reason)
                 .map_err(|error| BiometricError(error.to_string()))
         })
         .await

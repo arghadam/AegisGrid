@@ -1,10 +1,6 @@
 mod process_risk;
 
-pub use process_risk::{
-    ProcessRiskAssessment,
-    ProcessRiskLevel,
-    ProcessRiskSignal,
-};
+pub use process_risk::{ProcessRiskAssessment, ProcessRiskLevel, ProcessRiskSignal};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SecurityEventSeverity {
@@ -99,8 +95,7 @@ impl SecuritySnapshot {
             ProcessSecurityStatus::ReviewRecommended
         };
 
-        let warning_count = self.warning_count
-            + usize::from(suspicious_process_count > 0);
+        let warning_count = self.warning_count + usize::from(suspicious_process_count > 0);
 
         let threat_status = if suspicious_process_count > 0
             && self.threat_status == ThreatStatus::BasicProtectionActive

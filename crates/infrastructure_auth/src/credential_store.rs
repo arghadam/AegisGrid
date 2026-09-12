@@ -20,11 +20,7 @@ pub struct SecureCredentialStore;
 impl CredentialStore for SecureCredentialStore {
     type Error = CredentialStoreError;
 
-    fn store_password_hash(
-        &self,
-        username: &str,
-        password_hash: &str,
-    ) -> Result<(), Self::Error> {
+    fn store_password_hash(&self, username: &str, password_hash: &str) -> Result<(), Self::Error> {
         keyring::Entry::new(SERVICE_NAME, username)
             .map_err(|error| CredentialStoreError(error.to_string()))?
             .set_password(password_hash)

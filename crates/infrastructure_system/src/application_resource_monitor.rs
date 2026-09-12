@@ -31,9 +31,7 @@ impl SysinfoApplicationResourceMonitor {
         self.system.refresh_processes_specifics(
             ProcessesToUpdate::Some(&[pid]),
             true,
-            ProcessRefreshKind::nothing()
-                .with_cpu()
-                .with_memory(),
+            ProcessRefreshKind::nothing().with_cpu().with_memory(),
         );
 
         let process = self.system.process(pid)?;

@@ -13,11 +13,8 @@ pub trait AuthRepository: Clone + Send + Sync + 'static {
         username: &str,
     ) -> Result<Option<StoredCredential>, Self::Error>;
 
-    async fn create(
-        &self,
-        username: &str,
-        password_hash: &str,
-    ) -> Result<UserAccount, Self::Error>;
+    async fn create(&self, username: &str, password_hash: &str)
+    -> Result<UserAccount, Self::Error>;
 
     async fn update_password_hash(
         &self,
@@ -31,11 +28,7 @@ pub trait AuthRepository: Clone + Send + Sync + 'static {
 pub trait CredentialStore: Clone + Send + Sync + 'static {
     type Error: Error + Send + Sync + 'static;
 
-    fn store_password_hash(
-        &self,
-        username: &str,
-        password_hash: &str,
-    ) -> Result<(), Self::Error>;
+    fn store_password_hash(&self, username: &str, password_hash: &str) -> Result<(), Self::Error>;
 
     fn load_password_hash(&self, username: &str) -> Result<String, Self::Error>;
 

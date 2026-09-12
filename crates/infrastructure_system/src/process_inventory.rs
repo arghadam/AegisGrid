@@ -7,10 +7,7 @@ pub struct ProcessInventorySnapshot {
     pub table: String,
 }
 
-pub fn read_process_inventory(
-    query: &str,
-    limit: usize,
-) -> ProcessInventorySnapshot {
+pub fn read_process_inventory(query: &str, limit: usize) -> ProcessInventorySnapshot {
     let system = System::new_all();
     let normalized_query = query.trim().to_lowercase();
 
@@ -25,27 +22,13 @@ pub fn read_process_inventory(
                 .map(|value| value.to_string_lossy().into_owned())
                 .unwrap_or_else(|| "—".to_owned());
 
-            let searchable = format!(
-                "{} {} {}",
-                pid_value,
-                name,
-                path,
-            )
-            .to_lowercase();
+            let searchable = format!("{} {} {}", pid_value, name, path,).to_lowercase();
 
-            if !normalized_query.is_empty()
-                && !searchable.contains(&normalized_query)
-            {
+            if !normalized_query.is_empty() && !searchable.contains(&normalized_query) {
                 return None;
             }
 
-            Some((
-                process.cpu_usage(),
-                pid_value,
-                name,
-                process.memory(),
-                path,
-            ))
+            Some((process.cpu_usage(), pid_value, name, process.memory(), path))
         })
         .collect::<Vec<_>>();
 
@@ -71,11 +54,7 @@ pub fn read_process_inventory(
 
             format!(
                 "{} | {:>5.1}% | {:>7.1} MB | {}\n    {}",
-                pid,
-                cpu,
-                memory_mb,
-                short_name,
-                short_path,
+                pid, cpu, memory_mb, short_name, short_path,
             )
         })
         .collect::<Vec<_>>()
@@ -91,10 +70,7 @@ pub fn read_process_inventory(
 
     let remaining = matched_count.saturating_sub(effective_limit);
     if remaining > 0 {
-        table.push_str(&format!(
-            "\n\n+ {} WEITERE TREFFER",
-            remaining,
-        ));
+        table.push_str(&format!("\n\n+ {} WEITERE TREFFER", remaining,));
     }
 
     ProcessInventorySnapshot {

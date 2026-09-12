@@ -23,13 +23,11 @@ impl SecurityEventRepository for SqliteSecurityEventRepository {
         severity: SecurityEventSeverity,
         message: &str,
     ) -> Result<(), Self::Error> {
-        sqlx::query(
-            "INSERT INTO security_events (severity, message) VALUES (?, ?)",
-        )
-        .bind(severity_text(severity))
-        .bind(message)
-        .execute(&self.pool)
-        .await?;
+        sqlx::query("INSERT INTO security_events (severity, message) VALUES (?, ?)")
+            .bind(severity_text(severity))
+            .bind(message)
+            .execute(&self.pool)
+            .await?;
 
         sqlx::query(
             r#"

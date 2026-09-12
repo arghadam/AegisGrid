@@ -1,5 +1,5 @@
-pub mod database;
 mod auth_repository;
+pub mod database;
 mod security_event_repository;
 mod settings_store;
 

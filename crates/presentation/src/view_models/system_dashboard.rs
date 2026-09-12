@@ -14,9 +14,7 @@ impl From<SystemSnapshot> for SystemDashboardViewModel {
         let memory_percent = if snapshot.memory_total_bytes == 0 {
             0.0
         } else {
-            snapshot.memory_used_bytes as f64
-                / snapshot.memory_total_bytes as f64
-                * 100.0
+            snapshot.memory_used_bytes as f64 / snapshot.memory_total_bytes as f64 * 100.0
         };
 
         const GIB: f64 = 1024.0 * 1024.0 * 1024.0;

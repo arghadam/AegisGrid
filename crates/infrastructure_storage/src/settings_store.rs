@@ -10,10 +10,7 @@ impl AppSettingsStore {
         Self { pool }
     }
 
-    pub async fn load_animation_enabled(
-        &self,
-        default: bool,
-    ) -> Result<bool, sqlx::Error> {
+    pub async fn load_animation_enabled(&self, default: bool) -> Result<bool, sqlx::Error> {
         let value: Option<String> = sqlx::query_scalar(
             "SELECT value FROM app_settings WHERE key = 'animation_enabled' LIMIT 1",
         )
@@ -27,10 +24,7 @@ impl AppSettingsStore {
         })
     }
 
-    pub async fn load_auto_lock_minutes(
-        &self,
-        default: i32,
-    ) -> Result<i32, sqlx::Error> {
+    pub async fn load_auto_lock_minutes(&self, default: i32) -> Result<i32, sqlx::Error> {
         let value: Option<String> = sqlx::query_scalar(
             "SELECT value FROM app_settings WHERE key = 'auto_lock_minutes' LIMIT 1",
         )

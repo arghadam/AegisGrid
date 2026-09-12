@@ -1,10 +1,6 @@
 use application::ports::NetworkMonitor;
 use domain::network::NetworkSnapshot;
-use netstat2::{
-    get_sockets_info,
-    AddressFamilyFlags,
-    ProtocolFlags,
-};
+use netstat2::{AddressFamilyFlags, ProtocolFlags, get_sockets_info};
 use std::time::{Duration, Instant};
 use sysinfo::Networks;
 
@@ -42,7 +38,11 @@ impl NetworkMonitor for SysinfoNetworkMonitor {
         self.networks.refresh(true);
         self.last_refresh = Instant::now();
 
-        let received = self.networks.iter().map(|(_, data)| data.received()).sum::<u64>();
+        let received = self
+            .networks
+            .iter()
+            .map(|(_, data)| data.received())
+            .sum::<u64>();
         let transmitted = self
             .networks
             .iter()

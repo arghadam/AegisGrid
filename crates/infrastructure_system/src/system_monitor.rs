@@ -49,6 +49,7 @@ impl Default for SysinfoSystemMonitor {
 impl SystemMonitor for SysinfoSystemMonitor {
     fn identity(&self) -> SystemIdentity {
         let hostname = System::host_name().unwrap_or_else(|| "Unbekannt".to_owned());
+
         let operating_system = System::long_os_version()
             .or_else(System::name)
             .unwrap_or_else(|| "Unbekanntes Betriebssystem".to_owned());
@@ -66,13 +67,16 @@ impl SystemMonitor for SysinfoSystemMonitor {
         if self.last_process_refresh.elapsed() >= PROCESS_REFRESH_INTERVAL {
             self.system
                 .refresh_processes(sysinfo::ProcessesToUpdate::All, true);
+
             self.cached_process_count = self.system.processes().len();
             self.last_process_refresh = Instant::now();
         }
 
         if self.last_storage_refresh.elapsed() >= STORAGE_REFRESH_INTERVAL {
             self.disks.refresh(true);
+
             let (used, total) = storage_values(&self.disks);
+
             self.cached_storage_used = used;
             self.cached_storage_total = total;
             self.last_storage_refresh = Instant::now();
@@ -92,10 +96,9 @@ impl SystemMonitor for SysinfoSystemMonitor {
 fn storage_values(disks: &Disks) -> (u64, u64) {
     #[cfg(target_os = "macos")]
     {
-        // macOS/APFS exposes multiple logical volumes from the same physical
-        // container (for example System and Data). Summing all entries counts
-        // the same SSD capacity multiple times. The root mount represents the
-        // capacity that AegisGrid should show for the system drive.
+        // macOS/APFS stellt mehrere logische Volumes desselben physischen
+        // Containers bereit. Diese dürfen nicht zusammengerechnet werden,
+        // da die SSD-Kapazität sonst mehrfach gezählt wird.
         if let Some(root_disk) = disks
             .iter()
             .find(|disk| disk.mount_point() == Path::new("/"))
@@ -106,8 +109,8 @@ fn storage_values(disks: &Disks) -> (u64, u64) {
             );
         }
 
-        // Defensive fallback for unusual macOS mount configurations: use the
-        // largest reported volume instead of summing APFS sibling volumes.
+        // Fallback für ungewöhnliche macOS-Konfigurationen:
+        // das größte Volume verwenden, statt APFS-Volumes zu summieren.
         if let Some(largest_disk) = disks.iter().max_by_key(|disk| disk.total_space()) {
             return single_disk_storage_values(
                 largest_disk.total_space(),
@@ -128,6 +131,7 @@ fn storage_values(disks: &Disks) -> (u64, u64) {
     }
 }
 
+#[cfg(target_os = "macos")]
 fn single_disk_storage_values(total: u64, available: u64) -> (u64, u64) {
     (total.saturating_sub(available), total)
 }

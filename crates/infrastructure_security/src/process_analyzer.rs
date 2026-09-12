@@ -797,8 +797,8 @@ fn risk_level_priority(level: ProcessRiskLevel) -> u8 {
 mod tests {
     use super::{
         CodeSignatureMetadata, CodeSignatureStatus, ProcessAnomalyReason, ProcessSecurityAnalyzer,
-        ProcessSecuritySnapshot, SuspiciousProcess, add_unusual_permissions_signal,
-        calculate_file_sha256, parse_code_signature_metadata,
+        ProcessSecuritySnapshot, SuspiciousProcess, calculate_file_sha256,
+        parse_code_signature_metadata,
     };
     use domain::security::{ProcessRiskAssessment, ProcessRiskLevel, ProcessRiskSignal};
     use std::{
@@ -806,6 +806,9 @@ mod tests {
         path::PathBuf,
         time::{SystemTime, UNIX_EPOCH},
     };
+
+    #[cfg(unix)]
+    use super::add_unusual_permissions_signal;
 
     #[cfg(unix)]
     use std::os::unix::fs::PermissionsExt;
